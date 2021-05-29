@@ -1,0 +1,127 @@
+<template lang="pug">
+  .countdown.flex.text-lg.text-gray-500.leading-none(v-intersect, @intersect="play", @outersect="pause")
+    //- {{ timeFormatted }}
+    template(v-if="values.includes('y')")
+      div
+        div {{ ('0' + timeFormatted.year).slice(-2) }}
+        small.block.mt-8.text-base.text-white YEAR
+      .mx-5 :
+    template(v-if="values.includes('d')")
+      div
+        div {{ ('00' + timeFormatted.day).slice(-3) }}
+        small.block.mt-8.text-base.text-white DAY
+      .mx-5 :
+    template(v-if="values.includes('h')")
+      div
+        div {{ ('0' + timeFormatted.hour).slice(-2) }}
+        small.block.mt-8.text-base.text-white HOUR
+      .mx-5 :
+    template(v-if="values.includes('m')")
+      div
+        div {{ ('0' + timeFormatted.min).slice(-2) }}
+        small.block.mt-8.text-base.text-white MIN
+      .mx-5 :
+    template(v-if="values.includes('s')")
+      div
+        div {{ ('0' + timeFormatted.sec).slice(-2) }}
+        small.block.mt-8.text-base.text-white SEC
+      .mx-5 :
+    template(v-if="values.includes('ms')")
+      div
+        div {{ ('00' + timeFormatted.msec).slice(-3) }}
+        small.block.mt-8.text-base.text-white MSEC
+</template>
+
+<script>
+export default {
+  name: 'CountDown',
+  props: {
+    end: [String, Number],
+    values: { type: String, default: 'y,d,h,m,s,ms' }
+  },
+  data () {
+    return {
+      msUntil: 0,
+      anim: null
+    }
+  },
+  computed: {
+    timeFormatted () {
+      return getTimeUntil(this.msUntil)
+    },
+    endMs () {
+      // testing
+      const testMs = process.env.VUE_APP_DEV_COUNTDOWN
+      if (testMs) {
+        return new Date().getTime() + Number(testMs)
+      }
+      if (this.end) {
+        return isNaN(this.end) ? new Date(this.end).getTime() : this.end
+      }
+      return undefined
+    }
+  },
+  methods: {
+    play () {
+      if (this.endMs !== undefined) {
+        const nowMs = new Date().getTime()
+        const msUntil = this.endMs - nowMs
+        // end ??
+        if (msUntil <= 0) {
+          this.msUntil = 0
+          this.pause()
+          this.$emit('ended')
+          return
+        }
+        // update
+        this.msUntil = msUntil
+      }
+      // animation loop
+      this.anim = requestAnimationFrame(() => this.play())
+    },
+    pause () {
+      // pause animation
+      cancelAnimationFrame(this.anim)
+    }
+  },
+  mounted () {
+    this.play()
+  },
+  destroyed () {
+    this.pause()
+  }
+}
+
+export function getTimeUntil (milliseconds, separator = ' - ', omittSeconds, omittDays) {
+  let hour, minute, seconds, day
+
+  seconds = Math.floor(milliseconds / 1000)
+  milliseconds = Math.floor(milliseconds % 1000) // ms remaining (after seconds determination)
+
+  minute = Math.floor(seconds / 60)
+  seconds = seconds % 60
+
+  hour = Math.floor(minute / 60)
+  minute = minute % 60
+
+  day = Math.floor(hour / 24)
+  hour = hour % 24
+
+  const year = Math.floor(day / 365)
+  day = day % 365
+
+  const time = {
+    year: year,
+    day: day,
+    hour: hour,
+    min: minute,
+    sec: seconds,
+    msec: milliseconds
+  }
+
+  return time
+}
+</script>
+
+<style>
+</style>

@@ -16,16 +16,32 @@ export default {
       poems: []
     }
   },
+  methods: {
+    hideStaticContent () {
+      return document.getElementById('staticMain')?.remove()
+    },
+    getPoems () {
+      document.querySelectorAll('pre').forEach(el => {
+        let poem = JSON.parse(el.getAttribute('data-details'))
+        poem = { html: el.innerHTML, ...poem }
+        this.poems.push(poem)
+      })
+      // console.log(this.poems)
+    },
+    setStart () {
+      // test start ?
+      if (window.location.hash.length) {
+        this.start = Number(window.location.hash.replace('#', ''))
+        console.log(new Date(this.start))
+      }
+    }
+  },
   created () {
-    document.querySelectorAll('pre').forEach(el => {
-      let poem = JSON.parse(el.getAttribute('data-details'))
-      poem = { html: el.innerHTML, ...poem }
-      this.poems.push(poem)
-    })
-    console.log(this.poems)
+    this.getPoems()
+    this.setStart()
   },
   mounted () {
-    return document.getElementById('staticMain')?.remove()
+    this.hideStaticContent()
   }
 }
 </script>
