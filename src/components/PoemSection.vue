@@ -21,7 +21,7 @@
             span.text-md.md_text-lg 0.0
             small.block.absolute.w-full.pt-8.left-0.text-base.text-white ETH
           //- bid btn
-          button.mx-10.mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white BID
+          button.mx-10.lg_mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white BID
 
         //- bids list
         ul.mt-50.flex.justify-center.mx-auto
