@@ -731,6 +731,7 @@ module.exports = {
     mode: 'layers',
     layers: ['base', 'components', 'utilities'],
     content: [
+      'public/*.html',
       'src/**/*.vue'
       // 'src/plugins/**/*.js'
     ],
