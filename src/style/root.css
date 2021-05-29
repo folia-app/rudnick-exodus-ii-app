@@ -12,7 +12,7 @@
 }
 
 html{
-  font-size:12px; /* rem */
+  font-size:10px; /* rem */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Exodus II', sans-serif;
@@ -25,28 +25,32 @@ html{
 }
 
 body{
+  font-size: 1.6rem;
   line-height: calc(37/33);
+}
+
+pre{
+  font-family:inherit;
 }
 
 button {
   text-transform: inherit;
-}
-
-/* large text */
-pre,
-.text-lg{
-  font-family: inherit;
-  font-size:5rem;
-}
-/* scale font down so poems fit on screen */
-@media (max-width: 820px) {
-  pre, .text-lg{ 
-    font-size:calc(50/820 * 100vw);
+  &:focus{
+    outline:none;
   }
 }
 
+::selection {
+  background: white;
+  color:black;
+}
+
+
+/* large text */
+
+
 small {
-  font-size:1rem;
+  font-size:inherit;
 }
 
 /* sections */

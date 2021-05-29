@@ -11,8 +11,8 @@ module.exports = {
   theme: {
     screens: {
       sm: '568px',
-      md: '780px', // poem font-size vw based below
-      lg: '1024px',
+      md: '720px', // non-scaling large font step up
+      lg: '820px', // poem font-size vw based below
       xl: '1281px'
     },
     spacing: {
@@ -24,6 +24,7 @@ module.exports = {
       4: '.4rem',
       5: '.5rem',
       6: '.6rem',
+      7: '.7rem',
       8: '.8rem',
       10: '1.0rem',
       12: '1.2rem',
@@ -31,26 +32,20 @@ module.exports = {
       20: '2.0rem',
       24: '2.4rem',
       30: '3.0rem',
+      35: '3.5rem',
       40: '4.0rem',
       45: '4.5rem',
-      48: '4.8rem',
-      56: '5.6rem',
-      64: '6.4rem',
+      50: '5rem',
+      60: '6.0rem',
       80: '8rem',
       135: '13.5rem'
     },
     fontSize: {
-      // set type in root.css
-      // xs: '0.75rem',
-      // sm: '1.2rem',
-      // base: '1rem',
-      // lg: '1.125rem',
-      // xl: '1.25rem',
-      // '2xl': '5rem',
-      // '3xl': '1.875rem',
-      // '4xl': '2.25rem',
-      // '5xl': '3rem',
-      // '6xl': '4rem',
+      // set in root.css
+      base: '1.2rem', // design: 8px
+      md: '3.3rem',
+      lg: '5rem', // design: 33px
+      'poem-sm': 'calc(50/820 * 100vw)'
     },
     colors: {
       transparent: 'transparent',
@@ -216,6 +211,7 @@ module.exports = {
       widest: '0.1em'
     },
     lineHeight: {
+      flat: '0.8',
       none: '1',
       tight: '1.25',
       snug: '1.375',

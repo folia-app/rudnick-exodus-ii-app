@@ -1,5 +1,5 @@
 <template lang="pug">
-  .countdown.flex.text-lg.text-gray-500.leading-none(v-intersect, @intersect="play", @outersect="pause")
+  .countdown.flex.leading-none.text-md.md_text-lg(v-intersect, @intersect="play", @outersect="pause")
     //- {{ timeFormatted }}
     template(v-if="values.includes('y')")
       div
@@ -50,32 +50,30 @@ export default {
       return getTimeUntil(this.msUntil)
     },
     endMs () {
+      return this.end
       // testing
-      const testMs = process.env.VUE_APP_DEV_COUNTDOWN
-      if (testMs) {
-        return new Date().getTime() + Number(testMs)
-      }
-      if (this.end) {
-        return isNaN(this.end) ? new Date(this.end).getTime() : this.end
-      }
-      return undefined
+      // const testMs = process.env.VUE_APP_DEV_COUNTDOWN
+      // if (testMs) {
+      //   return new Date().getTime() + Number(testMs)
+      // }
+      // if (this.end) {
+      //   return isNaN(this.end) ? new Date(this.end).getTime() : this.end
+      // }
+      // return undefined
     }
   },
   methods: {
     play () {
-      if (this.endMs !== undefined) {
-        const nowMs = new Date().getTime()
-        const msUntil = this.endMs - nowMs
-        // end ??
-        if (msUntil <= 0) {
-          this.msUntil = 0
-          this.pause()
-          this.$emit('ended')
-          return
-        }
-        // update
-        this.msUntil = msUntil
+      const nowMs = new Date().getTime()
+      const msUntil = this.endMs - nowMs
+      // end ??
+      if (msUntil <= 0) {
+        this.msUntil = 0
+        this.$emit('ended')
+        return
       }
+      // update
+      this.msUntil = msUntil
       // animation loop
       this.anim = requestAnimationFrame(() => this.play())
     },

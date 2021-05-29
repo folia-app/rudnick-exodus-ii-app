@@ -30,9 +30,10 @@ export default {
     },
     setStart () {
       // test start ?
-      if (window.location.hash.length) {
-        this.start = Number(window.location.hash.replace('#', ''))
-        console.log(new Date(this.start))
+      const seconds = new URL(window.location.href).searchParams.get('s')
+      if (seconds) {
+        // add X seconds
+        this.start = new Date().getTime() + Number(seconds) * 1000
       }
     }
   },
