@@ -3,7 +3,6 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true
   },
-  purge: [],
   target: 'relaxed',
   prefix: '',
   important: false,
@@ -725,5 +724,32 @@ module.exports = {
     animation: ['responsive']
   },
   corePlugins: {},
-  plugins: []
+  plugins: [],
+  purge: {
+    // Learn more on https://tailwindcss.com/docs/controlling-file-size/#removing-unused-css
+    enabled: process.env.NODE_ENV === 'production',
+    mode: 'layers',
+    layers: ['base', 'components', 'utilities'],
+    content: [
+      'src/**/*.vue'
+      // 'src/plugins/**/*.js'
+    ],
+    options: {
+      whitelistPatterns: [
+        // pug classes
+        // https://github.com/tailwindlabs/tailwindcss/pull/1639#issuecomment-623703605
+        /^.[^\.]*\.[^\. "']*/, // eslint-disable-line
+        // vue transition classes
+        /-enter-active$/,
+        /-leave-active$/,
+        /-enter$/,
+        /-leave-to$/
+        // content-dynamic classes
+        // /object-/,
+        // /grid-cols-/
+        // /^col-span-/,
+        // /x12$/, // dynamic widths (w-5x12, md-w-6x12)
+      ]
+    }
+  }
 }
