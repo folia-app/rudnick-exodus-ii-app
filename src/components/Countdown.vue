@@ -4,32 +4,32 @@
     template(v-if="values.includes('y')")
       div
         div {{ ('0' + timeFormatted.year).slice(-2) }}
-        small.block.mt-8.text-base.text-white YEAR
+        small.block.mt-8.text-base YEAR
       .mx-5 :
     template(v-if="values.includes('d')")
       div
         div {{ ('00' + timeFormatted.day).slice(-3) }}
-        small.block.mt-8.text-base.text-white DAY
+        small.block.mt-8.text-base DAY
       .mx-5 :
     template(v-if="values.includes('h')")
       div
         div {{ ('0' + timeFormatted.hour).slice(-2) }}
-        small.block.mt-8.text-base.text-white HOUR
+        small.block.mt-8.text-base HOUR
       .mx-5 :
     template(v-if="values.includes('m')")
       div
         div {{ ('0' + timeFormatted.min).slice(-2) }}
-        small.block.mt-8.text-base.text-white MIN
+        small.block.mt-8.text-base MIN
       .mx-5 :
     template(v-if="values.includes('s')")
       div
         div {{ ('0' + timeFormatted.sec).slice(-2) }}
-        small.block.mt-8.text-base.text-white SEC
+        small.block.mt-8.text-base SEC
       .mx-5 :
     template(v-if="values.includes('ms')")
       div
         div {{ ('00' + timeFormatted.msec).slice(-3) }}
-        small.block.mt-8.text-base.text-white MSEC
+        small.block.mt-8.text-base MSEC
 </template>
 
 <script>
