@@ -42,8 +42,8 @@ module.exports = {
     },
     fontSize: {
       // set in root.css
-      sm: '1.2rem',
-      base: '1.6rem', // design: 8px
+      sm: '1.3rem',
+      base: '1.5rem', // design: 8px
       md: '3.3rem',
       lg: '5rem', // design: 33px
       'poem-sm': 'calc(50/820 * 100vw)'

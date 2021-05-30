@@ -2,7 +2,7 @@
   section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
     pre.text-poem-sm.lg_text-lg(v-html="poem.html")
     div
-      small.block {{ poem.label }}
+      small.block.text-sm {{ poem.label }}
 
       //- (auction asleep)
       template(v-if="auctionStatus === 0")
@@ -19,12 +19,12 @@
           //- bid
           .mx-20.leading-flat.relative
             span.text-md.md_text-lg 0.0
-            small.block.absolute.w-full.pt-8.left-0.text-base.text-white ETH
+            small.block.absolute.w-full.pt-8.left-0.text-sm.text-white.font-medium ETH
           //- bid btn
-          button.mx-10.lg_mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white BID
+          button.mx-10.lg_mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white.text-sm.font-medium BID
 
         //- bids list
-        ul.mt-50.flex.justify-center.mx-auto
+        ul.mt-50.flex.justify-center.mx-auto.font-medium.text-base
           .max-w-full.px-15.mx-auto.w-auto.flex.flex-col-reverse(v-if="auctionStatus", v-show="auctionStatus === 1 || bidsVisible")
             li.w-full.flex.justify-between(v-for="n in 12")
               .min-w-0.flex-auto.text-left
