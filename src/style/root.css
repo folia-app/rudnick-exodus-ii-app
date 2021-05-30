@@ -8,7 +8,13 @@
   font-family: 'Exodus II';
   src: url('/fonts/exodus_ii_display.woff2') format('woff2'), url('/fonts/exodus_ii_display.woff') format('woff');
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Exodus II';
+  src: url('/fonts/exodus_ii_menu.woff2') format('woff2'), url('/fonts/exodus_ii_menu.woff') format('woff');
+  font-style: normal;
+  font-weight: 500;
 }
 
 html{
@@ -50,7 +56,8 @@ button {
 
 
 small {
-  font-size:inherit;
+  /* font-size:inherit; */
+  @apply font-medium;
 }
 
 /* sections */
