@@ -1,34 +1,34 @@
 <template lang="pug">
-  .countdown.flex.leading-none.text-md.md_text-lg(v-intersect, @intersect="play", @outersect="pause")
+  .countdown.flex.leading-none.text-md.md_text-lg.cursor-default(v-intersect, @intersect="play", @outersect="pause")
     //- {{ timeFormatted }}
     template(v-if="values.includes('y')")
       div
-        div {{ ('0' + timeFormatted.year).slice(-2) }}
+        .text-gray-400 {{ ('0' + timeFormatted.year).slice(-2) }}
         small.block.mt-8.font-medium.text-sm YEAR
       .mx-5 :
     template(v-if="values.includes('d')")
       div
-        div {{ ('00' + timeFormatted.day).slice(-3) }}
+        .text-gray-400 {{ ('00' + timeFormatted.day).slice(-3) }}
         small.block.mt-8.font-medium.text-sm DAY
       .mx-5 :
     template(v-if="values.includes('h')")
       div
-        div {{ ('0' + timeFormatted.hour).slice(-2) }}
+        .text-gray-400 {{ ('0' + timeFormatted.hour).slice(-2) }}
         small.block.mt-8.font-medium.text-sm HOUR
       .mx-5 :
     template(v-if="values.includes('m')")
       div
-        div {{ ('0' + timeFormatted.min).slice(-2) }}
+        .text-gray-400 {{ ('0' + timeFormatted.min).slice(-2) }}
         small.block.mt-8.font-medium.text-sm MIN
       .mx-5 :
     template(v-if="values.includes('s')")
       div
-        div {{ ('0' + timeFormatted.sec).slice(-2) }}
+        .text-gray-400 {{ ('0' + timeFormatted.sec).slice(-2) }}
         small.block.mt-8.font-medium.text-sm SEC
       .mx-5 :
     template(v-if="values.includes('ms')")
       div
-        div {{ ('00' + timeFormatted.msec).slice(-3) }}
+        .text-gray-400 {{ ('00' + timeFormatted.msec).slice(-3) }}
         small.block.mt-8.font-medium.text-sm MSEC
 </template>
 
@@ -121,5 +121,17 @@ export function getTimeUntil (milliseconds, separator = ' - ', omittSeconds, omi
 }
 </script>
 
-<style>
+<style lang="postcss">
+/* countdown labels only appear on hover */
+@media (hover:hover) and (min-width: 1024px) {
+  .countdown {
+    & small {
+      opacity: 0;
+      transition: opacity 500ms;
+    }
+    &:hover small {
+      opacity: 1;
+    }
+  }
+}
 </style>

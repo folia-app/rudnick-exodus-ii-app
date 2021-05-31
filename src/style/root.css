@@ -12,7 +12,7 @@
 }
 @font-face {
   font-family: 'Exodus II';
-  src: url('/fonts/exodus_ii_menu.woff2') format('woff2'), url('/fonts/exodus_ii_menu.woff') format('woff');
+  src: url('/fonts/exodus_ii_m2.woff2') format('woff2'), url('/fonts/exodus_ii_m2.woff') format('woff');
   font-style: normal;
   font-weight: 500;
 }
@@ -21,7 +21,7 @@ html{
   font-size:10px; /* rem */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Exodus II', sans-serif;
+  font-family: 'Exodus II', monospace;
 }
 
 @media (min-width: 720px) {
@@ -41,6 +41,7 @@ pre{
 
 button {
   text-transform: inherit;
+  font-weight:inherit;
   &:focus{
     outline:none;
   }

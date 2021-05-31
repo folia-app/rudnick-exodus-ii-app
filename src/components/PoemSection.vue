@@ -1,6 +1,6 @@
 <template lang="pug">
   section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
-    pre.text-poem-sm.lg_text-lg(v-html="poem.html")
+    pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html")
     div
       small.block.text-sm {{ poem.label }}
 
