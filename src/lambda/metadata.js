@@ -27,8 +27,7 @@ exports.handler = async function (event, context) {
       // owner: owner,
       // name: `${doc.data.artist}, "${doc.data.title}", ${doc.data.year} (${printNo}/${doc.data.edition})`,
 
-      description: metadata.description, // work.description.replace('{{no}}', printNo(work, tokenId)), // by token ID?
-      // description: doc.data.description[0].text ?? '',
+      description: metadata.description.replace('{{date}}', token.date || 'XXXX'), // by token ID?
 
       // all assets related to the work (posterity)
       // directory: token.directory || work.directory,
@@ -44,16 +43,7 @@ exports.handler = async function (event, context) {
       image_url: `${domain}/metadata/${tokenId}.svg`,
 
       // opensea
-      // attributes: [
-      //   {
-      //     trait_type: 'artist',
-      //     value: doc.data.artist
-      //   },
-      //   {
-      //     trait_type: 'year',
-      //     value: doc.data.year
-      //   }
-      // ],
+      attributes: token.attributes || [],
       // rarebits
       // properties: [
       //   { key: 'zodiac', value: returnZodiac(tokenId), type: 'string' }

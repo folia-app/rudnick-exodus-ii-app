@@ -2,7 +2,7 @@ export default {
   // titlePattern: 'Songs for the Contract {{no}}',
   // editions: 3,
   // generative: true,
-  description: 'David Rudnick. A collaboration with Folia',
+  description: 'Unlocked {{date}} EST.\n\nEXODUS 2 by David Rudnick.\nDeveloped in collaboration with Folia.\n\n',
   // release: '03-05-2021 09:00:00 pm +01:00',
   // directory: 'https://cloudflare-ipfs.com/ipfs/QmXiad6QM7GSxtCqcQa7aYJKVkbb62Qm6CCTHVhPcEA2ZS/FLA11000000__Emily-Segal__Code-of-Holes__2021',
   // assetPath: '',
@@ -17,7 +17,18 @@ export default {
       title: 'III – The Ark Groans, Zags Up'
     },
     3: {
-      title: 'IV – Hyperspectral Dawn'
+      title: 'IV – Hyperspectral Dawn',
+      date: '2021.06.06 07:06:28 -0400',
+      attributes: [
+        {
+          trait_type: 'Characters',
+          value: 60
+        },
+        {
+          trait_type: 'Hours Locked',
+          value: 5.350341796875
+        }
+      ]
     },
     4: {
       title: 'V – Zones Flex, Make New Ruins'
