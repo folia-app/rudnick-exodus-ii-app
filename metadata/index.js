@@ -2,7 +2,7 @@ export default {
   // titlePattern: 'Songs for the Contract {{no}}',
   // editions: 3,
   // generative: true,
-  description: 'Unlocked {{date}} EST.\n\nEXODUS 2 by David Rudnick. \nDeveloped in collaboration with Folia.',
+  description: 'Unlocked {{date}} EST.\n\nEXODUS 2 by David Rudnick. \nDeveloped in collaboration with [Folia](https://folia.app).',
   // release: '03-05-2021 09:00:00 pm +01:00',
   // directory: 'https://cloudflare-ipfs.com/ipfs/QmXiad6QM7GSxtCqcQa7aYJKVkbb62Qm6CCTHVhPcEA2ZS/FLA11000000__Emily-Segal__Code-of-Holes__2021',
   // assetPath: '',
