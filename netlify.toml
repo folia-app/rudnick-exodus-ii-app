@@ -1,0 +1,7 @@
+[build]
+  functions = "functions"
+
+# tokenURI > netlify function
+[[redirects]]
+  from = "/v1/metadata/*"
+  to = "/.netlify/functions/metadata/:splat"
