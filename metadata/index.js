@@ -8,61 +8,61 @@ export default {
   // assetPath: '',
   tokens: {
     0: {
-      title: 'I &ndash; Transfixed By Zion'
+      title: 'I – Transfixed By Zion'
     },
     1: {
-      title: 'II &ndash; The Quickest Jury Now'
+      title: 'II – The Quickest Jury Now'
     },
     2: {
-      title: 'III &ndash; The Ark Groans, Zags Up'
+      title: 'III – The Ark Groans, Zags Up'
     },
     3: {
-      title: 'IV &ndash; Hyperspectral Dawn'
+      title: 'IV – Hyperspectral Dawn'
     },
     4: {
-      title: 'V &ndash; Zones Flex, Make New Ruins'
+      title: 'V – Zones Flex, Make New Ruins'
     },
     5: {
-      title: 'VI &ndash; Void Arrows, Zip Like'
+      title: 'VI – Void Arrows, Zip Like'
     },
     6: {
-      title: 'VII &ndash; Jagged Quartz Towers'
+      title: 'VII – Jagged Quartz Towers'
     },
     7: {
-      title: 'VIII &ndash; Verdant Perjury'
+      title: 'VIII – Verdant Perjury'
     },
     8: {
-      title: 'IX &ndash; Nonreal Packet Maze'
+      title: 'IX – Nonreal Packet Maze'
     },
     9: {
-      title: 'X &ndash; Hacked Amazon'
+      title: 'X – Hacked Amazon'
     },
     10: {
-      title: 'XI &ndash; Quadratic Empire'
+      title: 'XI – Quadratic Empire'
     },
     11: {
-      title: 'XII &ndash; Jinxed Lightlife Ends'
+      title: 'XII – Jinxed Lightlife Ends'
     },
     12: {
-      title: 'XIII &ndash; Subtropical Shrines'
+      title: 'XIII – Subtropical Shrines'
     },
     13: {
-      title: 'XIV &ndash; Body Juts, Friezed'
+      title: 'XIV – Body Juts, Friezed'
     },
     14: {
-      title: 'XV &ndash; Flesh, Triumphal Grave'
+      title: 'XV – Flesh, Triumphal Grave'
     },
     15: {
-      title: 'XVI &ndash; The Fog Of Junk Psalms'
+      title: 'XVI – The Fog Of Junk Psalms'
     },
     16: {
-      title: "XVII &ndash; About Plato's Cave"
+      title: "XVII – About Plato's Cave"
     },
     17: {
-      title: 'XVIII &ndash; Darkness, Refresh View'
+      title: 'XVIII – Darkness, Refresh View'
     },
     18: {
-      title: 'XIX &ndash; Hijacked Forms, Waves'
+      title: 'XIX – Hijacked Forms, Waves'
     }
   }
 }
