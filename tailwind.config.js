@@ -741,9 +741,9 @@ module.exports = {
         /-enter-active$/,
         /-leave-active$/,
         /-enter$/,
-        /-leave-to$/
+        /-leave-to$/,
         // content-dynamic classes
-        // /object-/,
+        /text-gray-/
         // /grid-cols-/
         // /^col-span-/,
         // /x12$/, // dynamic widths (w-5x12, md-w-6x12)
