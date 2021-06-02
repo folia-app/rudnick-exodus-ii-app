@@ -1,0 +1,195 @@
+<template lang="pug">
+.auction
+  .flex.w-full.justify-center
+    //- 24hr countdown
+    <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
+
+  form.mt-35.w-full.flex.justify-center.items-center(@submit.prevent="bid")
+    //- bid
+    .mx-20.leading-flat.relative
+      label.sr-only Enter a bid:
+      input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", required, :step="bidStepETH", :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
+      small.block.absolute.w-full.pt-8.left-0.text-sm.text-white.font-medium ETH
+    //- bid btn
+    button.mx-10.lg_mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white.text-sm.font-medium(type="submit") BID
+
+  //- bid lists
+  .mt-50.flex.justify-center.mx-auto.font-medium.text-base
+    .max-w-full.px-15.mx-auto.w-auto
+      //- my bids
+      ul.mb-30.text-gray-500.flex.flex-col-reverse(v-if="myBids.length")
+        li.w-full.flex.justify-between.group(v-for="bid in myBids")
+          div {{ bid.status === 2 ? 'ERROR/CANCELLED' : 'BIDDING...' }}
+          div.group-hover_hidden {{ bid.amount }}
+          button.hidden.group-hover_block.text-white(@click="removeMyBid(bid.time)") DELETE
+
+      //- all bids list
+      ul.text-gray-500
+        li.w-full.flex.justify-between(v-for="bid in bids", :class="{'text-white': auction.bidder === bid.sender && auction.amount === bid.value}")
+          .min-w-0.flex-auto.text-left
+            div.truncate {{ address === bid.sender ? 'YOU' : '0x' + bid.sender.slice(2).toUpperCase() }}
+              //- a(href="http://etherscan.io/address/0xaF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53", target="_blank")
+                | 0x{{'aF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53'.toUpperCase()}}
+          div.ml-30 {{ weiToETH(bid.value) }}
+        //- li.w-full.flex.justify-between(v-for="n in 12")
+          .min-w-0.flex-auto.text-left
+            div.truncate
+              a(href="http://etherscan.io/address/0xaF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53", target="_blank")
+                | 0x{{'aF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53'.toUpperCase()}}
+          div.ml-30 {{ (n - 1) / 10 }}
+</template>
+
+<script>
+import { mapState, mapGetters } from 'vuex'
+import Countdown from './Countdown'
+export default {
+  name: 'Auction',
+  props: ['releaseMs', 'tokenId'],
+  components: { Countdown },
+  data () {
+    return {
+      auction: null,
+      bidETH: 0,
+      myBids: [],
+      bids: [],
+      listening: false
+    }
+  },
+  computed: {
+    ...mapState(['reserveAuctionContract', 'address']),
+    ...mapGetters(['weiToETH', 'ethToWei', 'addrShort', 'openSeaLink']),
+    bidStepETH () {
+      return this.$store.state.auctions.bidStepETH
+    },
+    auctionEndMs () {
+      // TESTING ?
+      const testSeconds = new URL(window.location.href).searchParams.get('c')
+      if (testSeconds) {
+        return this.releaseMs + 1000 * testSeconds
+      }
+      if (this.auction?.firstBidTime) {
+        return (Number(this.auction.firstBidTime) + Number(this.auction.duration)) * 1000
+      }
+      // default 24h from release
+      return this.releaseMs + 24 * 60 * 60 * 1000
+    },
+    minBidETH () {
+      let minBid = '0'
+      if (this.auction) {
+        const reserve = Number(this.weiToETH(this.auction.reservePrice))
+        const currentBid = Number(this.weiToETH(this.auction.amount))
+        minBid = currentBid ? Number(currentBid + this.bidStepETH).toFixed(1) : reserve
+      }
+      return minBid.toString()
+    }
+  },
+  methods: {
+    async getAuction () {
+      this.auction = null // "Loading..."
+      this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
+      if (this.auction) {
+        // TODO check this getter logic...
+        const ended = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
+        if (ended) {
+          this.$emit('ended')
+        } else {
+          this.bidETH = this.minBidETH
+          this.listenToContract()
+          this.getBids()
+        }
+      }
+    },
+
+    async getBids () {
+      this.bids = await this.$store.dispatch('auctions/getPastBids', { token: this.tokenId })
+    },
+
+    async bid () {
+      // track click
+      this.$gtag.event('bidBtnClick', { event_category: 'auction', event_label: 'Auction.vue', value: `${this.tokenId}: ${this.bidETH}ETH` })
+      // add to myBids
+      const time = new Date().getTime()
+      this.myBids.push({ time, amount: this.bidETH, status: 0 })
+      // submit bid
+      const bid = await this.$store.dispatch('auctions/bid', { token: this.tokenId, wei: this.ethToWei(this.bidETH) })
+      // ...
+      if (bid) {
+        // success!
+        this.removeMyBid(time)
+      } else {
+        // cancelled / error -> update status
+        const bids = [...this.myBids]
+        const i = bids.findIndex(bid => bid.time === time)
+        if (i > -1) bids[i].status = 2
+      }
+    },
+
+    // async endAuction () {
+    //   await this.$store.dispatch('auctions/endAuction', { token: this.tokenId })
+    //   this.getAuction()
+    // },
+
+    listenToContract () {
+      if (this.reserveAuctionContract && !this.listening) {
+        // new bid !
+        this.reserveAuctionContract.events
+          .AuctionBid()
+          .on('data', this.onAuctionEvent)
+          .on('error', (error) => console.error(error))
+
+        // auction ended !
+        // this.reserveAuctionContract.events
+        //   .AuctionEnded()
+        //   .on('data', this.onAuctionEvent)
+        //   .on('error', (error) => console.error(error))
+
+        this.listening = true
+      }
+    },
+
+    onAuctionEvent (event) {
+      console.log('@auctionEvent', event)
+      // refresh if current auction
+      if (event.returnValues?.tokenId === this.tokenId.toString()) {
+        this.getAuction()
+        this.getBids()
+      }
+    },
+
+    onTimerEnded () {
+      this.getAuction()
+      // will determine if auction truly ended or extended in last minuted...
+    },
+
+    removeMyBid (time) {
+      const i = this.myBids.findIndex(bid => bid.time === time)
+      if (i > -1) this.myBids.splice(i, 1)
+    }
+  },
+  created () {
+    this.getAuction()
+  },
+  watch: {
+    tokenId () {
+      this.getAuction()
+    },
+    reserveAuctionContract () {
+      this.getAuction()
+    }
+  }
+}
+</script>
+
+<style lang="postcss">
+input[type="number"] {
+  background: none;
+  /* remove arrows */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}
+</style>
