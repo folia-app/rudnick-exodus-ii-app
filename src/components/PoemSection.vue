@@ -7,7 +7,7 @@
       //- (auction asleep)
       template(v-if="auctionStatus === 0")
         .mt-12.flex.w-full.justify-center
-          <countdown :end="releaseMs" @ended="auctionStatus = 1" key="0"></countdown>
+          <countdown :end="releaseMs" @ended="auctionStatus = 1" key="0" :pending="true"></countdown>
 
       //- (auction active !)
       template(v-else-if="auctionStatus === 1")
