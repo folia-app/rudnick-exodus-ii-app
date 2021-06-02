@@ -107,7 +107,7 @@ export function getTimeUntil (milliseconds, separator = ' - ', omittSeconds, omi
   hour = hour % 24
 
   const year = Math.floor(day / 365.25)
-  day = day % 365.25
+  day = Math.floor(day % 365.25)
 
   const time = {
     year: year,
