@@ -1,34 +1,34 @@
 <template lang="pug">
-  .countdown.flex.leading-none.text-md.md_text-lg.cursor-default(v-intersect, @intersect="play", @outersect="pause")
+  .countdown.flex.leading-none.text-md.md_text-lg.cursor-default(v-intersect, @intersect="play", @outersect="pause", :class="{'countdown--pending': pending}")
     //- {{ timeFormatted }}
     template(v-if="values.includes('y')")
       div
-        .text-gray-400 {{ ('0' + timeFormatted.year).slice(-2) }}
+        .countdown__num {{ ('0' + timeFormatted.year).slice(-2) }}
         small.block.mt-8.font-medium.text-sm YEAR
       .mx-5 :
     template(v-if="values.includes('d')")
       div
-        .text-gray-400 {{ ('00' + timeFormatted.day).slice(-3) }}
+        .countdown__num {{ ('00' + timeFormatted.day).slice(-3) }}
         small.block.mt-8.font-medium.text-sm DAY
       .mx-5 :
     template(v-if="values.includes('h')")
       div
-        .text-gray-400 {{ ('0' + timeFormatted.hour).slice(-2) }}
+        .countdown__num {{ ('0' + timeFormatted.hour).slice(-2) }}
         small.block.mt-8.font-medium.text-sm HOUR
       .mx-5 :
     template(v-if="values.includes('m')")
       div
-        .text-gray-400 {{ ('0' + timeFormatted.min).slice(-2) }}
+        .countdown__num {{ ('0' + timeFormatted.min).slice(-2) }}
         small.block.mt-8.font-medium.text-sm MIN
       .mx-5 :
     template(v-if="values.includes('s')")
       div
-        .text-gray-400 {{ ('0' + timeFormatted.sec).slice(-2) }}
+        .countdown__num {{ ('0' + timeFormatted.sec).slice(-2) }}
         small.block.mt-8.font-medium.text-sm SEC
       .mx-5 :
     template(v-if="values.includes('ms')")
       div
-        .text-gray-400 {{ ('00' + timeFormatted.msec).slice(-3) }}
+        .countdown__num {{ ('00' + timeFormatted.msec).slice(-3) }}
         small.block.mt-8.font-medium.text-sm MSEC
 </template>
 
@@ -37,7 +37,8 @@ export default {
   name: 'CountDown',
   props: {
     end: [String, Number],
-    values: { type: String, default: 'y,d,h,m,s,ms' }
+    values: { type: String, default: 'y,d,h,m,s,ms' },
+    pending: Boolean
   },
   data () {
     return {
@@ -105,8 +106,8 @@ export function getTimeUntil (milliseconds, separator = ' - ', omittSeconds, omi
   day = Math.floor(hour / 24)
   hour = hour % 24
 
-  const year = Math.floor(day / 365)
-  day = day % 365
+  const year = Math.floor(day / 365.25)
+  day = day % 365.25
 
   const time = {
     year: year,
@@ -122,9 +123,13 @@ export function getTimeUntil (milliseconds, separator = ' - ', omittSeconds, omi
 </script>
 
 <style lang="postcss">
+.countdown--pending .countdown__num{
+  @apply text-gray-400;
+}
+
 /* countdown labels only appear on hover */
 @media (hover:hover) and (min-width: 1024px) {
-  .countdown {
+  .countdown--pending {
     & small {
       opacity: 0;
       transition: opacity 500ms;
