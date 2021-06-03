@@ -160,7 +160,7 @@ with glissando foam.
         const start = 'Sun Jun 05 2021 20:24:26 GMT-0400'
         const offset = document.querySelector('pre').getAttribute('data-offset') // hours
         const endMs = new Date(start).getTime() + Number(offset) * 60 * 60 * 1000
-        console.log(endMs)
+        
         let anim
         
         const els = {
@@ -187,8 +187,8 @@ with glissando foam.
           day = Math.floor(hour / 24)
           hour = hour % 24
 
-          const year = Math.floor(day / 365)
-          day = day % 365
+          const year = Math.floor(day / 365.25)
+          day = Math.floor(day % 365.25)
 
           const time = {
             year: year,

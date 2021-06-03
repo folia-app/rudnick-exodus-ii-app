@@ -3,7 +3,6 @@ node_modules
 /dist
 /functions
 
-
 # local env files
 .env
 # .env.local
