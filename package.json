@@ -11,10 +11,12 @@
     "lambda:build": "netlify-lambda build src/lambda"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^3.1.2",
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
     "tailwindcss": "1",
     "vue": "^2.6.11",
+    "vue-gtag": "^1.16.1",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
