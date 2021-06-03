@@ -1,6 +1,6 @@
 <template lang="pug">
   #app.pb-135
-    poem-section(v-for="poem in poems", :poem="poem", :key="poem.offsetHrs", :start="start")
+    poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1")
 
 </template>
 
