@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-import './registerServiceWorker'
+// import './registerServiceWorker'
 import store from './store'
+import analytics from './plugins/vue-gtag'
 
 // Global directive to observe element visibility
 // <div v-observe="0.1" @visible, @hidden>
@@ -30,5 +31,8 @@ Vue.directive('intersect', {
 
 new Vue({
   store,
-  render: h => h(App)
+  render: h => h(App),
+  mounted () {
+    analytics()
+  }
 }).$mount('#app')
