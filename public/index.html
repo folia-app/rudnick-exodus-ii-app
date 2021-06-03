@@ -40,7 +40,7 @@
             <div>CLOSED 2061</div>
           </small>
         </div>
-        <a class="sm_order-first">About</a>
+        <a class="sm_order-first" href="#about" id="aboutBtn">About</a>
         <a href="/calendar-demo.ics">CALENDAR +</a>
       </header>
       
@@ -273,8 +273,24 @@ Selbstverselbstlichung.</pre>
           </div>
         </section>
       </main>
+      <footer id="about" class="min-h-screen flex p-20 overflow-y-scroll" style="background:rgba(0,0,0,0.9)">
+        <div style="max-width: 32em; line-height:1.15" class="m-auto text-base font-medium uppercase">
+          <p>EXODUS 2 is a series of 19 pangram haikus<br>
+          composed by David Rudnick between 2010 and 2011.</p>
+          <br><br>
+          Each work is a haiku which, as a pangram, contains all 26 letters of the standard western alphabet.
+          <br><br>
+          The works are locked in a custom smart contract in an inverse fibionacci sequence, with the final work unlocked 40 years from the first.
+          <br><br>
+          Once unlocked, a 24h auction sequence is triggered with no reserve. New high bids in the last 15 minutes extend the auction timer by a further 15 minutes until&nbsp;close.
+          </p>
+        </div>
+      </footer>
     </article>
     <div id="app"></div>
+    <a href="https://www.folia.app" target="_blank" class="block w-24 lg_w-30 my-30 lg_my-50 mx-auto opacity-50 lg_hover_opacity-100 transition duration-500">
+      <img src="/folia-logo.svg" alt="Folia Logo (fleuron leaf)" class="w-full block" />
+    </a>
     <!-- built files will be auto injected -->
   </body>
 </html>

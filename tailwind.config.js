@@ -38,7 +38,7 @@ module.exports = {
       50: '5rem',
       60: '6.0rem',
       80: '8rem',
-      135: '13.5rem'
+      135: '15rem' // boost 10%
     },
     fontSize: {
       // set in root.css
