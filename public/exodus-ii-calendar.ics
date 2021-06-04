@@ -28,9 +28,13 @@ DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-1646906408@marudot.com
 DTSTART;TZID=America/New_York:20210605T202426
 DTEND;TZID=America/New_York:20210606T202426
-SUMMARY:Transfixed by Zion The New Jews spam hypertexts\, Light-sick\, Quivering
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Transfixed by Zion The New Jews spam hypertexts\, Light-sick\, Quivering.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:I – Transfixed By Zion\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -38,8 +42,12 @@ UID:20210531T161743Z-1376041433@marudot.com
 DTSTART;TZID=America/New_York:20210605T230456
 DTEND;TZID=America/New_York:20210606T230456
 SUMMARY:The quickest jury now\; Ever golden New form zone\, No expectations.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:II – The Quickest Jury Now\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -47,17 +55,25 @@ UID:20210531T161743Z-1010439454@marudot.com
 DTSTART;TZID=America/New_York:20210606T014527
 DTEND;TZID=America/New_York:20210607T014527
 SUMMARY:The Ark groans\, zags up amethyst waves. Sea of squares\; jailborn code - next world.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:III – The Ark Groans, Zags Up\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-524972384@marudot.com
 DTSTART;TZID=America/New_York:20210606T070628
 DTEND;TZID=America/New_York:20210607T070628
-SUMMARY:Hyperspectral dawn Quakes\, beams blaze the jewel face\, venomized excess
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Hyperspectral dawn Quakes\, beams blaze the jewel face\, venomized excess.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:IV – Hyperspectral Dawn\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -65,8 +81,12 @@ UID:20210531T161743Z-1160004374@marudot.com
 DTSTART;TZID=America/New_York:20210606T174830
 DTEND;TZID=America/New_York:20210607T174830
 SUMMARY:Zones flex\, make new ruins. Paradise conquistadors Jails veiled by light.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:V – Zones Flex, Make New Ruins\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -74,8 +94,12 @@ UID:20210531T161743Z-1463726749@marudot.com
 DTSTART;TZID=America/New_York:20210607T151235
 DTEND;TZID=America/New_York:20210608T151235
 SUMMARY:Void arrows\, zip like larks\, hymns mixing\, joy cyphers\; Liquid Gold Fusion.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:VI – Void Arrows, Zip Like\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -83,8 +107,12 @@ UID:20210531T161743Z-636332519@marudot.com
 DTSTART;TZID=America/New_York:20210609T100045
 DTEND;TZID=America/New_York:20210610T100045
 SUMMARY:Jagged quartz towers\, Packed above the navy bluffs\, mix nectar and light.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:VII – Jagged Quartz Towers\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -92,26 +120,38 @@ UID:20210531T161743Z-1999775808@marudot.com
 DTSTART;TZID=America/New_York:20210612T233705
 DTEND;TZID=America/New_York:20210613T233705
 SUMMARY:Verdant Perjury\; life\, pixellized in ghost loams warps\, quickens\, recedes.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:VIII – Verdant Perjury\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-327730872@marudot.com
 DTSTART;TZID=America/New_York:20210620T024944
 DTEND;TZID=America/New_York:20210621T024944
-SUMMARY:Nonreal packet maze The jacquard blades of textiles weaving light arrays
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Nonreal packet maze The jacquard blades of textiles weaving light arrays.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:IX – Nonreal Packet Maze\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-1495588746@marudot.com
 DTSTART;TZID=America/New_York:20210704T091503
 DTEND;TZID=America/New_York:20210705T091503
-SUMMARY:Hacked Amazon Jungle syntax waveform\, now displaced by squares
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Hacked Amazon Jungle syntax waveform\, now displaced by squares.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:X – Hacked Amazon\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -119,26 +159,38 @@ UID:20210531T161743Z-1304616110@marudot.com
 DTSTART;TZID=America/New_York:20210801T220541
 DTEND;TZID=America/New_York:20210802T220541
 SUMMARY:Quadratic Empire\; Megajoule helix woven block by freezing block.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XI – Quadratic Empire\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-1472851702@marudot.com
 DTSTART;TZID=America/New_York:20210927T234656
 DTEND;TZID=America/New_York:20210928T234656
-SUMMARY:jinxed lightlife ends\; Quit\, Respawn. Shadow playback\, venom horizon.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Jinxed lightlife ends\; Quit\, Respawn. Shadow playback\, venom horizon.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XII – Jinxed Lightlife Ends\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-724879952@marudot.com
 DTSTART;TZID=America/New_York:20220120T020926
 DTEND;TZID=America/New_York:20220121T020926
-SUMMARY:subtropical shrines\; hajiis\, pixels liquidized walk the lucent graves
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:Subtropical shrines\; hajiis\, pixels liquidized walk the lucent graves.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XIII – Subtropical Shrines\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -146,8 +198,12 @@ UID:20210531T161743Z-1036313154@marudot.com
 DTSTART;TZID=America/New_York:20220905T095426
 DTEND;TZID=America/New_York:20220906T095426
 SUMMARY:Body juts\, friezed. faqirs seek exemption\, wilt - Vibe Sarcophagi.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XIV – Body Juts, Friezed\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -155,26 +211,38 @@ UID:20210531T161743Z-1583373135@marudot.com
 DTSTART;TZID=America/New_York:20231205T222426
 DTEND;TZID=America/New_York:20231206T222426
 SUMMARY:Flesh\, triumphal grave. Helix wreck\, joyless\, oblique\; Ozymandias.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XV – Flesh, Triumphal Grave\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-2023780804@marudot.com
 DTSTART;TZID=America/New_York:20260606T022426
 DTEND;TZID=America/New_York:20260607T022426
-SUMMARY:The fog of junk psalms Requests to the wreck reflex Hypnotized blank verse
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:The fog of junk psalms Requests to the wreck reflex Hypnotized blank verse.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XVI – The Fog Of Junk Psalms\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
 UID:20210531T161743Z-976708162@marudot.com
 DTSTART;TZID=America/New_York:20310606T082426
 DTEND;TZID=America/New_York:20310607T082426
-SUMMARY:About Plato's cave Text jets quilt the azure sky  with glissando foam
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+SUMMARY:About Plato's cave Text jets quilt the azure sky  with glissando foam.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XVII – About Plato's Cave\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -182,8 +250,12 @@ UID:20210531T161743Z-776238532@marudot.com
 DTSTART;TZID=America/New_York:20410605T202426
 DTEND;TZID=America/New_York:20410606T202426
 SUMMARY:Darkness\, refresh view Coming flux\; Onyx\, Jasper The Bezel Époque.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XVIII – Darkness, Refresh View\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20210531T161743Z
@@ -191,7 +263,11 @@ UID:20210531T161743Z-1274119808@marudot.com
 DTSTART;TZID=America/New_York:20610605T202426
 DTEND;TZID=America/New_York:20610606T202426
 SUMMARY:Hijacked forms\, waves Body poem\, dazzling equinox Selbstverselbstlichung.
-URL:https://exodus2.folia.app
-DESCRIPTION:NFT unlocked for 24h auction. From the "EXODUS 2" series by David Rudnick.
+URL:https://exodus-ii.folia.app
+DESCRIPTION:XIX – Hijacked Forms, Waves\nEXODUS 2, David Rudnick\nNFT unlocked for 24h auction
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 END:VCALENDAR

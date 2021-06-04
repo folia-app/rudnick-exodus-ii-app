@@ -32,7 +32,8 @@ export default function () {
           params: {
             client_id: visitorId,
             anonymize_ip: true,
-            client_storage: 'none' // no cookie :)
+            client_storage: 'none', // no cookie :)
+            send_page_view: true // initial page view
           }
         }
       })

@@ -2,7 +2,7 @@ export default {
   // titlePattern: 'Songs for the Contract {{no}}',
   // editions: 3,
   // generative: true,
-  description: 'Unlocked {{date}} EST\n\nEXODUS 2 by David Rudnick.\n\nIn collaboration with [Folia](https://folia.app).',
+  description: 'Unlocked {{date}} EST\n\nEXODUS 2, David Rudnick [2011-2021].\n\nPublished in partnership with [Folia](https://folia.app).',
   // release: '03-05-2021 09:00:00 pm +01:00',
   // directory: 'https://cloudflare-ipfs.com/ipfs/QmXiad6QM7GSxtCqcQa7aYJKVkbb62Qm6CCTHVhPcEA2ZS/FLA11000000__Emily-Segal__Code-of-Holes__2021',
   // assetPath: '',
@@ -13,7 +13,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '59'
+          value: 59
         },
         {
           trait_type: 'Hours Locked',
@@ -27,7 +27,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '53'
+          value: 53
         },
         {
           trait_type: 'Hours Locked',
@@ -41,7 +41,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '64'
+          value: 64
         },
         {
           trait_type: 'Hours Locked',
@@ -55,7 +55,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '60'
+          value: 60
         },
         {
           trait_type: 'Hours Locked',
@@ -69,7 +69,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '60'
+          value: 60
         },
         {
           trait_type: 'Hours Locked',
@@ -83,7 +83,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '59'
+          value: 59
         },
         {
           trait_type: 'Hours Locked',
@@ -97,7 +97,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '59'
+          value: 59
         },
         {
           trait_type: 'Hours Locked',
@@ -111,7 +111,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '60'
+          value: 60
         },
         {
           trait_type: 'Hours Locked',
@@ -125,7 +125,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '62'
+          value: 62
         },
         {
           trait_type: 'Hours Locked',
@@ -139,7 +139,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '53'
+          value: 53
         },
         {
           trait_type: 'Hours Locked',
@@ -153,7 +153,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '54'
+          value: 54
         },
         {
           trait_type: 'Hours Locked',
@@ -167,7 +167,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '56'
+          value: 56
         },
         {
           trait_type: 'Hours Locked',
@@ -181,7 +181,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '59'
+          value: 59
         },
         {
           trait_type: 'Hours Locked',
@@ -195,7 +195,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '52'
+          value: 52
         },
         {
           trait_type: 'Hours Locked',
@@ -209,7 +209,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '53'
+          value: 53
         },
         {
           trait_type: 'Hours Locked',
@@ -223,7 +223,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '62'
+          value: 62
         },
         {
           trait_type: 'Hours Locked',
@@ -237,7 +237,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '56'
+          value: 56
         },
         {
           trait_type: 'Hours Locked',
@@ -251,7 +251,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '53'
+          value: 53
         },
         {
           trait_type: 'Hours Locked',
@@ -265,7 +265,7 @@ export default {
       attributes: [
         {
           trait_type: 'Letters',
-          value: '63'
+          value: 63
         },
         {
           trait_type: 'Hours Locked',

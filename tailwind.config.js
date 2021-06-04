@@ -38,7 +38,9 @@ module.exports = {
       50: '5rem',
       60: '6.0rem',
       80: '8rem',
-      135: '13.5rem'
+      100: '10rem',
+      110: '11rem',
+      135: '15rem' // boost 10%
     },
     fontSize: {
       // set in root.css
@@ -743,7 +745,6 @@ module.exports = {
         /-enter$/,
         /-leave-to$/
         // content-dynamic classes
-        // /object-/,
         // /grid-cols-/
         // /^col-span-/,
         // /x12$/, // dynamic widths (w-5x12, md-w-6x12)

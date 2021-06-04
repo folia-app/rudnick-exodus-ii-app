@@ -2,7 +2,9 @@
   section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
     pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html")
     div
-      small.block.text-sm {{ poem.label }}
+      small.block.text-sm
+        a(:href="`https://opensea.io/assets/0x76e422de0ce8842ebe837bc7ab6984b4fff88055/${tokenId}`", target="_blank", rel="noopener noreferrer", class="lg_hover_text-white transition duration-100")
+          | {{ poem.label }}
 
       //- (auction asleep)
       template(v-if="auctionStatus === 0")
