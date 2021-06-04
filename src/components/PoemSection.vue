@@ -13,7 +13,7 @@
 
       //- (auction active !)
       template(v-else-if="auctionStatus === 1")
-        auction.mt-12(:releaseMs="releaseMs", @ended="auctionStatus = 2", :tokenId="tokenId")
+        auction.mt-12(:releaseMs="releaseMs", :tokenId="tokenId")
 
       //- (acution ended)
       template(v-else-if="auctionStatus === 2")

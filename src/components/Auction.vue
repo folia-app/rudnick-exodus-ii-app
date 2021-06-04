@@ -4,14 +4,19 @@
     //- 24hr countdown
     <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
 
-  form.mt-35.w-full.flex.justify-center.items-center(@submit.prevent="bid")
+  //- (bidding UI)
+  form.mt-35.w-full.flex.justify-center.items-center(@submit.prevent="bid", v-if="auctionEnded !== true")
     //- bid
     .mx-20.leading-flat.relative
       label.sr-only Enter a bid:
       input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", required, :step="bidStepETH", :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
       small.block.absolute.w-full.pt-8.left-0.text-sm.text-white.font-medium ETH
     //- bid btn
-    button.mx-10.lg_mb-7.h-30.flex.items-center.pt-2.border.border-gray-500.rounded-full.px-20.leading-flat.lg_hover_bg-white.lg_hover_text-black.focus_bg-white.focus_text-black.lg_hover_border-white.focus_border-white.text-sm.font-medium(type="submit") BID
+    btn.mx-10.lg_mb-7.px-20(type="submit") BID
+
+  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded")
+    template(v-if="sameAddr(address, auction.bidder)") CLAIM
+    template(v-else) END
 
   //- bid lists
   .mt-50.flex.justify-center.mx-auto.font-medium.text-base
@@ -25,11 +30,11 @@
 
       //- all bids list
       ul.text-gray-500
-        li.w-full.flex.justify-between(v-for="bid in bids", :class="{'text-white': auction.bidder === bid.sender && auction.amount === bid.value}")
+        li.w-full.flex.justify-between(v-for="(bid, i) in bids", :class="{'text-white': sameAddr(auction.bidder, bid.sender) && auction.amount === bid.value && i === 0}")
           .min-w-0.flex-auto.text-left
-            div.truncate {{ address === bid.sender ? 'YOU' : '0x' + bid.sender.slice(2).toUpperCase() }}
-              //- a(href="http://etherscan.io/address/0xaF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53", target="_blank")
-                | 0x{{'aF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53'.toUpperCase()}}
+            div.truncate
+              a.lg_hover_text-white(:href="openSeaLink({account: bid.sender})", target="_blank", rel="noopener noreferrer")
+                | {{ sameAddr(address, bid.sender) ? 'YOU' : '0x' + bid.sender.slice(2).toUpperCase() }}
           div.ml-30 {{ weiToETH(bid.value) }}
         //- li.w-full.flex.justify-between(v-for="n in 12")
           .min-w-0.flex-auto.text-left
@@ -42,17 +47,19 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import Countdown from './Countdown'
+import Btn from './Btn'
 export default {
   name: 'Auction',
   props: ['releaseMs', 'tokenId'],
-  components: { Countdown },
+  components: { Countdown, Btn },
   data () {
     return {
       auction: null,
-      bidETH: 0,
+      bidETH: '0',
       myBids: [],
       bids: [],
-      listening: false
+      listening: false,
+      auctionEnded: null
     }
   },
   computed: {
@@ -89,13 +96,14 @@ export default {
       this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
       if (this.auction) {
         // TODO check this getter logic...
-        const ended = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
-        if (ended) {
-          this.$emit('ended')
-        } else {
-          this.bidETH = this.minBidETH
+        this.auctionEnded = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
+        this.getBids()
+        this.bidETH = this.minBidETH
+        if (!this.auctionEnded) {
+          // this.bidETH = this.minBidETH
           this.listenToContract()
-          this.getBids()
+        } else {
+          // this.$emit('ended')
         }
       }
     },
@@ -107,11 +115,14 @@ export default {
     async bid () {
       // track click
       this.$gtag.event('bidBtnClick', { event_category: 'auction', event_label: 'Auction.vue', value: `${this.tokenId}: ${this.bidETH}ETH` })
+
       // add to myBids
       const time = new Date().getTime()
       this.myBids.push({ time, amount: this.bidETH, status: 0 })
+
       // submit bid
       const bid = await this.$store.dispatch('auctions/bid', { token: this.tokenId, wei: this.ethToWei(this.bidETH) })
+
       // ...
       if (bid) {
         // success!
@@ -164,6 +175,10 @@ export default {
     removeMyBid (time) {
       const i = this.myBids.findIndex(bid => bid.time === time)
       if (i > -1) this.myBids.splice(i, 1)
+    },
+
+    sameAddr (first, second) {
+      return first?.toLowerCase() === second?.toLowerCase()
     }
   },
   created () {
