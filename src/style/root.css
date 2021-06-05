@@ -47,6 +47,10 @@ button {
   }
 }
 
+input{
+  border-radius:0;
+}
+
 ::selection {
   background: white;
   color:black;

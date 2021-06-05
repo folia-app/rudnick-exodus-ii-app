@@ -15,7 +15,7 @@
       //- bid
       .mx-20.leading-flat.relative
         label.sr-only Enter a bid:
-        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
+        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}", inputmode="decimal")
         small.block.absolute.w-full.mt-2.md_mt-5.pt-8.left-0.text-sm.text-white.font-medium ETH
       //- bid btn
       btn.mx-10.lg_mb-7.px-20(type="submit") BID
@@ -36,7 +36,7 @@
           //- amount / delete
           div.md_min-w-1x5.text-right.whitespace-no-wrap.flex-shrink-0
             div.group-hover_hidden {{ bid.amount }}
-            button.hidden.group-hover_inline.text-white(@click="removeMyBid(bid.time)") DELETE
+            button.hidden.group-hover_inline.text-white(@click="removeMyBid(bid.time)") HIDE
 
       //- all bids list
       ul.text-gray-500
@@ -244,6 +244,13 @@ export default {
     },
     reserveAuctionContract () {
       this.getAuction()
+    },
+    address (val, old) {
+      if (old === null) {
+        // wallet connect doesn't seem to load the auction...
+        console.log('addr change')
+        this.getAuction()
+      }
     }
   }
 }
@@ -263,10 +270,7 @@ input[type="number"] {
 }
 
 .auction input{
-  /* animation: blinking-cursor 1s infinite; */
-  /* line-height: 0.75; */
-  border-bottom:1px dotted gray;
-  /* transition:none; */
+  border-bottom:1px solid gray;
 }
 @media (hover:hover) {
   .auction input:hover{
@@ -275,31 +279,5 @@ input[type="number"] {
 }
 .auction input:focus{
   border-bottom:1px solid white;
-  /* animation:none */
-  /* border-bottom:1px solid white; */
-}
-@keyframes blinking-cursor {
-  0%{
-    /* background:none;
-    color:inherit; */
-    border-right:1px solid transparent;
-  }
-  /* 33%{
-    background:white;
-    color:black;
-  }
-  66%{
-    background:none;
-    color:inherit;
-  } */
-  49%{
-    border-right:1px solid transparent;
-  }
-  50%{
-    border-right:1px dotted white;
-  }
-  100%{
-    border-right:1px dotted white;
-  }
 }
 </style>
