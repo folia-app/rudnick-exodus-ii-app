@@ -203,6 +203,8 @@ module.exports = {
     }),
     inset: {
       0: '0',
+      100: '10rem',
+      130: '13rem',
       auto: 'auto'
     },
     letterSpacing: {

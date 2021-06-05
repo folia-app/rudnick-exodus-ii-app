@@ -12,6 +12,7 @@
     //- poems
     poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace")
 
+    <img id="horizon" src="./assets/void.png" class="fixed w-full block top-130 sm_top-100 z-50 left-0 pointer-events-none" />
 </template>
 
 <script>
