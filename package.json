@@ -14,7 +14,7 @@
     "@fingerprintjs/fingerprintjs": "^3.1.2",
     "@walletconnect/web3-provider": "^1.4.1",
     "core-js": "^3.6.5",
-    "folia-contracts": "github:folia-app/folia-contracts#ce1b5c0bd34f9457f08b3c907e502cb666edcc1d",
+    "folia-contracts": "github:folia-app/folia-contracts#ef5331ed28e083b4bf7c1af3ca07a6a0bb22039e",
     "lodash": "^4.17.21",
     "register-service-worker": "^1.7.1",
     "tailwindcss": "1",
