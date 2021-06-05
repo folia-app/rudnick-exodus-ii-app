@@ -80,7 +80,7 @@ export default {
         auction = await getters.contract.methods.auctions(token).call()
 
         // format + save
-        if (auction && auction.exists) {
+        if (auction?.exists) {
           // format
           auction = { _tokenId: token, ...auction }
           // save

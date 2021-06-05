@@ -1,11 +1,16 @@
 <template lang="pug">
 .auction(v-if="auction")
-  .flex.w-full.justify-center(v-if="!auction.winner")
-    //- 24hr countdown
+  //- countdown clock
+  .flex.w-full.justify-center(v-if="auction && !auction.winner")
     <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
 
+  //- (completed / winner)
+  .mt-20.text-base.font-medium(v-if="auction.winner", @click="")
+    a.lg_hover_text-white(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer")
+      username(:address="auction.winner")
+
   //- (bidding UI)
-  form.mt-35.flex.justify-center.w-full(@submit.prevent="bid", v-if="auctionEnded !== true")
+  form.mt-35.flex.justify-center.w-full(@submit.prevent="bid", v-else-if="auctionEnded !== true")
     .flex.items-center.group.px-20
       //- bid
       .mx-20.leading-flat.relative
@@ -17,11 +22,6 @@
 
   //- claim btn
   btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
-
-  //- (winner)
-  .mt-20.text-base.font-medium(v-else-if="auction.winner", @click="")
-    a.lg_hover_text-white(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer")
-      username(:address="auction.winner")
 
   //- bid lists
   .mt-50.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
@@ -66,7 +66,7 @@ import Btn from './Btn'
 import Username from './Username'
 export default {
   name: 'Auction',
-  props: ['releaseMs', 'tokenId'],
+  props: ['releaseMs', 'tokenId', 'auctionInit'],
   components: { Countdown, Btn, Username },
   data () {
     return {
@@ -235,6 +235,7 @@ export default {
     }
   },
   created () {
+    this.auction = this.auctionInit || {}
     this.getAuction()
   },
   watch: {

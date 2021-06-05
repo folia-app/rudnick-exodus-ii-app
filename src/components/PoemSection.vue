@@ -11,21 +11,17 @@
         .mt-12.flex.w-full.justify-center
           <countdown :end="releaseMs" @ended="auctionStatus = 1" key="releaseMs" :pending="true"></countdown>
 
-      //- (auction active !)
+      //- (auction active / ended !)
       template(v-else-if="auctionStatus === 1")
-        auction.mt-12(ref="auction", :releaseMs="releaseMs", :tokenId="tokenId")
+        auction.mt-12(ref="auction", :releaseMs="releaseMs", :tokenId="tokenId", :auctionInit="auction")
 
-      //- (acution ended)
-      template(v-else-if="auctionStatus === 2")
-        .mt-12.w-full.text-center.truncate
-          a(href="http://etherscan.io/address/0xaF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53", target="_blank")
-            | 0x{{'aF2CE0962D1a4B1AAB10f7faA62bBbcA40a8EA53'.toUpperCase()}}
+    //- debug info
+    .text-gray.text-lg(v-if="debug")
+      | + {{ poem.offsetHrs }} hrs<br>
+      | {{ new Date(releaseMs).toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) }}<br>
+      | {{ new Date(releaseMs) / 1000 }} sec<br>
+      //- | {{ releaseMs }} msec
 
-            //- bids
-      //- p.text-lg.text-gray-500.mt-10.text-center
-        | + {{ poem.offsetHrs }} hrs
-        | <br>{{ readable }}
-        |
 </template>
 
 <script>
@@ -41,7 +37,8 @@ export default {
       auctionStatus: 0,
       bidsVisible: false,
       auction: null,
-      hasIntersected: false
+      hasIntersected: false,
+      debug: new URL(window.location.href).searchParams.get('debug')
     }
   },
   computed: {
@@ -69,6 +66,10 @@ export default {
       this.hasIntersected = true
       if (this.auction === null) {
         this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
+        // ended?
+        if (this.auction?.winner) {
+          this.auctionStatus = 1
+        }
       }
     }
   },
