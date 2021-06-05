@@ -5,14 +5,15 @@
     <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
 
   //- (bidding UI)
-  form.mt-35.w-full.flex.justify-center.items-center(@submit.prevent="bid", v-if="auctionEnded !== true")
-    //- bid
-    .mx-20.leading-flat.relative
-      label.sr-only Enter a bid:
-      input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
-      small.block.absolute.w-full.pt-8.left-0.text-sm.text-white.font-medium ETH
-    //- bid btn
-    btn.mx-10.lg_mb-7.px-20(type="submit") BID
+  form.mt-35.flex.justify-center.w-full(@submit.prevent="bid", v-if="auctionEnded !== true")
+    .flex.items-center.group.px-20
+      //- bid
+      .mx-20.leading-flat.relative
+        label.sr-only Enter a bid:
+        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
+        small.block.absolute.w-full.mt-2.md_mt-5.pt-8.left-0.text-sm.text-white.font-medium ETH
+      //- bid btn
+      btn.mx-10.lg_mb-7.px-20(type="submit") BID
 
   //- claim btn
   btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
@@ -257,6 +258,47 @@ input[type="number"] {
     -moz-appearance: none;
     appearance: none;
     margin: 0;
+  }
+}
+
+.auction input{
+  /* animation: blinking-cursor 1s infinite; */
+  /* line-height: 0.75; */
+  border-bottom:1px dotted white;
+  /* transition:none; */
+}
+@media (hover:hover) {
+  .auction input:hover{
+    border-bottom-style:solid;
+  }
+}
+.auction input:focus{
+  border-bottom-style:solid;
+  /* animation:none */
+  /* border-bottom:1px solid white; */
+}
+@keyframes blinking-cursor {
+  0%{
+    /* background:none;
+    color:inherit; */
+    border-right:1px solid transparent;
+  }
+  /* 33%{
+    background:white;
+    color:black;
+  }
+  66%{
+    background:none;
+    color:inherit;
+  } */
+  49%{
+    border-right:1px solid transparent;
+  }
+  50%{
+    border-right:1px dotted white;
+  }
+  100%{
+    border-right:1px dotted white;
   }
 }
 </style>
