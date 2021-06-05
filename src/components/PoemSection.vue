@@ -16,7 +16,7 @@
         auction.mt-12(ref="auction", :releaseMs="releaseMs", :tokenId="tokenId", :auctionInit="auction")
 
     //- debug info
-    .text-gray.text-lg(v-if="debug")
+    .text-gray.text-lg(v-if="$store.state.debug")
       | + {{ poem.offsetHrs }} hrs<br>
       | {{ new Date(releaseMs).toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) }}<br>
       | {{ new Date(releaseMs) / 1000 }} sec<br>
@@ -37,8 +37,7 @@ export default {
       auctionStatus: 0,
       bidsVisible: false,
       auction: null,
-      hasIntersected: false,
-      debug: new URL(window.location.href).searchParams.get('debug')
+      hasIntersected: false
     }
   },
   computed: {
@@ -57,9 +56,9 @@ export default {
   methods: {
     onPoemClick () {
       // testing ?
-      if (this.$store.state.networkId === 4) {
-        this.auctionStatus = 1
-      }
+      // if (this.$store.state.networkId === 4) {
+      //   this.auctionStatus = 1
+      // }
       return this.$refs.auction?.toggleBids()
     },
     async getAuction () {

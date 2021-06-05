@@ -50,7 +50,8 @@ export default new Vuex.Store({
     works: [],
     tokens: [],
     metadatas: [],
-    names: {}
+    names: {},
+    debug: new URL(window.location.href).searchParams.get('debug')
   },
   getters: {
     weiToETH: () => (wei) => web3?.utils.fromWei(wei) ?? '-',

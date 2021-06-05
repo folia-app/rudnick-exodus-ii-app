@@ -206,6 +206,7 @@ module.exports = {
       100: '10rem',
       130: '13rem',
       150: '15rem',
+      horizon: 'calc(148/911 * 100vh)',
       auto: 'auto'
     },
     letterSpacing: {

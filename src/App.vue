@@ -12,7 +12,8 @@
     //- poems
     poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace")
 
-    <img id="horizon" src="./assets/void.png" class="fixed w-full block top-150 z-50 left-0 pointer-events-none" />
+    //- horizon line
+    <img v-if="horizonVisible" src="./assets/void.png" class="fixed w-full block top-150ff top-130 sm_top-horizon z-40 left-0 pointer-events-none" />
 </template>
 
 <script>
@@ -36,6 +37,9 @@ export default {
     ...mapGetters(['addrShort']),
     tokenSpace () {
       return this.$store.state.networkId === 4 ? 1000 : 0
+    },
+    horizonVisible () {
+      return this.$store.state.debug || new Date() > new Date(this.start)
     }
   },
   methods: {
