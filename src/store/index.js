@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { ReserveAuction } from 'folia-contracts'
+import ReserveAuction from 'folia-contracts/build/contracts/ReserveAuction.json'
 import Web3 from 'web3'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
