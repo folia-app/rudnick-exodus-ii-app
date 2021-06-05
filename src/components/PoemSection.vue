@@ -9,7 +9,7 @@
       //- (auction asleep)
       template(v-if="auctionStatus === 0")
         .mt-12.flex.w-full.justify-center
-          <countdown :end="releaseMs" @ended="auctionStatus = 1" key="releaseMs" :pending="true"></countdown>
+          <countdown :end="releaseMs" @ended="onUnlockTimerEnd" key="releaseMs" :pending="true"></countdown>
 
       //- (auction active / ended !)
       template(v-else-if="auctionStatus === 1")
@@ -70,6 +70,10 @@ export default {
           this.auctionStatus = 1
         }
       }
+    },
+    onUnlockTimerEnd () {
+      this.auctionStatus = 1
+      this.$emit('sunrise')
     }
   },
   watch: {

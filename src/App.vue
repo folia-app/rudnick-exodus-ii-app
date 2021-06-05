@@ -10,10 +10,10 @@
         button.ml-20(v-show="disconnectVisible", @click="$store.dispatch('disconnect')") DISCONNECT
 
     //- poems
-    poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace")
+    poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace", @sunrise="now = new Date()")
 
     //- horizon line
-    <img v-if="horizonVisible" src="./assets/void.png" class="fixed w-full block top-150ff top-130 sm_top-horizon z-40 left-0 pointer-events-none" />
+    <img src="./assets/void.png" class="fixed w-full block top-150ff top-130 sm_top-horizon z-40 left-0 pointer-events-none transition duration-1000" :class="{'opacity-0': !horizonVisible}" />
 </template>
 
 <script>
@@ -29,7 +29,8 @@ export default {
       start: 'Sun Jun 05 2021 20:24:26 GMT-0400',
       poems: [],
       disconnectVisible: false,
-      tmout: null
+      tmout: null,
+      now: new Date()
     }
   },
   computed: {
@@ -39,7 +40,7 @@ export default {
       return this.$store.state.networkId === 4 ? 1000 : 0
     },
     horizonVisible () {
-      return this.$store.state.debug || new Date() > new Date(this.start)
+      return this.$store.state.debug || this.now > new Date(this.start)
     }
   },
   methods: {
