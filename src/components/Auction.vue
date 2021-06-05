@@ -102,9 +102,8 @@ export default {
         const BigInt = window.BigInt
         const reserve = BigInt(this.auction.reservePrice) // wei
         const currentBid = BigInt(this.auction.amount) // wei
-        const step = this.ethToWei(this.bidStepETH.toString()) // wei
-        minBid = !currentBid ? reserve
-          : (currentBid + step)
+        const step = BigInt(this.ethToWei(this.bidStepETH.toString())) // wei
+        minBid = currentBid ? currentBid + step : reserve
         minBid = this.weiToETH(minBid.toString()) // eth
       }
       return minBid.toString()
