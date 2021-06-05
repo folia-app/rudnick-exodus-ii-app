@@ -264,16 +264,16 @@ input[type="number"] {
 .auction input{
   /* animation: blinking-cursor 1s infinite; */
   /* line-height: 0.75; */
-  border-bottom:1px dotted white;
+  border-bottom:1px dotted gray;
   /* transition:none; */
 }
 @media (hover:hover) {
   .auction input:hover{
-    border-bottom-style:solid;
+    border-bottom:1px solid white;
   }
 }
 .auction input:focus{
-  border-bottom-style:solid;
+  border-bottom:1px solid white;
   /* animation:none */
   /* border-bottom:1px solid white; */
 }
