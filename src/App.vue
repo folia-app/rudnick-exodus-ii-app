@@ -37,7 +37,8 @@ export default {
     ...mapState(['address']),
     ...mapGetters(['addrShort']),
     tokenSpace () {
-      return this.$store.state.networkId === 4 ? 1000 : 0
+      const space = process.env.VUE_APP_TOKENSPACE ?? 0
+      return space // this.$store.state.networkId === 4 ? 1000 : 0
     },
     horizonVisible () {
       return this.$store.state.debug || this.now > new Date(this.start)
