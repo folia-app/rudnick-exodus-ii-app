@@ -117,9 +117,10 @@ export default {
       // console.log(`fetched ${this.tokenId}`)
 
       if (this.auction) {
+        this.getBids()
         // TODO check this getter logic...
         this.auctionEnded = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
-        this.getBids()
+
         if (!this.auctionEnded) {
           // console.log(this.auction.amount, this.minBidETH)
           this.bidETH = this.minBidETH
@@ -208,10 +209,9 @@ export default {
     },
 
     async endAuction () {
-      console.log('clicky')
       // TODO - confirm anyone can end given that end of auction will transfer back to artist?
       const resp = await this.$store.dispatch('auctions/endAuction', { token: this.tokenId })
-      console.log('after', resp)
+      console.log(resp)
       this.getAuction()
     },
 
