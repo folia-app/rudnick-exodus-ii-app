@@ -266,6 +266,8 @@ module.exports = {
     },
     minWidth: {
       0: '0',
+      '1x4': 'calc(100% / 4)',
+      '1x5': 'calc(100% / 5)',
       full: '100%'
     },
     objectPosition: {

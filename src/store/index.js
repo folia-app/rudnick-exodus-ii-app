@@ -7,6 +7,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 // import { exception } from 'vue-gtag'
 // modules
 import auctions from './auctions'
+import debounce from 'lodash/debounce'
 
 const networks = {
   mainnet: { id: 1, infura: 'wss://mainnet.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' },
@@ -49,7 +50,8 @@ export default new Vuex.Store({
 
     works: [],
     tokens: [],
-    metadatas: []
+    metadatas: [],
+    names: {}
   },
   getters: {
     weiToETH: () => (wei) => web3?.utils.fromWei(wei) ?? '-',
@@ -141,6 +143,9 @@ export default new Vuex.Store({
         )
         console.log('auction addr', ReserveAuction.networks[networkId].address)
       }
+    },
+    SAVE_NAME (state, { address, name }) {
+      state[address] = name
     }
   },
   actions: {
@@ -234,7 +239,28 @@ export default new Vuex.Store({
         console.error('disconnected?', error)
         dispatch('disconnect')
       })
-    }
+    },
+
+    getAddressOpenSeaName: debounce(async function ({ state, commit, dispatch }, address) {
+      try {
+        address = address.toLowerCase()
+        // saved?
+        if (state.names[address]) return state.names[address]
+        // get!
+        const prefix = state.networkId === 4 ? 'testnets-' : ''
+        let resp = await fetch(`https://${prefix}api.opensea.io/api/v1/account/${address}`)
+        resp = await resp.json()
+
+        const name = resp.data?.user?.username
+        if (name) {
+          commit('SAVE_NAME', { address, name })
+        }
+        return name
+      } catch (e) {
+        console.error('@getAddressOpenSeaName', e)
+        return false
+      }
+    }, 1001, { leading: true, trailing: false })
 
     /* buy artwork */
     // async buy ({ state, dispatch }, workId) {

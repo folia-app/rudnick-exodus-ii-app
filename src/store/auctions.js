@@ -62,12 +62,13 @@ export default {
   actions: {
     async get ({ state, getters, commit, dispatch }, { token }) {
       try {
+        let auction
         // saved ?
-        let auction = state.auctions.find(auc => auc._tokenId === token)
-        // auction ended? use saved
-        if (getters.auctionEnded({ auction })) {
-          return auction
-        }
+        // let auction = state.auctions.find(auc => auc._tokenId === token)
+        // // auction ended? use saved
+        // if (getters.auctionEnded({ auction })) {
+        //   return auction
+        // }
         // ...fetch
         // !! contract missing
         if (!getters.contract) {
@@ -88,7 +89,7 @@ export default {
         // maybe ended ?
         if (auction && !auction.exists) {
           const ended = await dispatch('getAuctionsEnded')
-          auction = ended.find(auc => auc._tokenId === token)
+          auction = ended.find(auc => auc._tokenId === token.toString())
         }
 
         return auction

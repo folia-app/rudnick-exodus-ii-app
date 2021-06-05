@@ -1,6 +1,6 @@
 <template lang="pug">
-.auction
-  .flex.w-full.justify-center
+.auction(v-if="auction")
+  .flex.w-full.justify-center(v-if="!auction.winner")
     //- 24hr countdown
     <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
 
@@ -14,13 +14,19 @@
     //- bid btn
     btn.mx-10.lg_mb-7.px-20(type="submit") BID
 
-  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded")
+  //- (end/claim)
+  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner", @click.native="endAuction")
     template(v-if="sameAddr(address, auction.bidder)") CLAIM
     template(v-else) END
 
+  //- (winner)
+  .mt-20.text-base.font-medium(v-else-if="auction.winner", @click="")
+    a.lg_hover_text-white(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer")
+      username(:address="auction.winner")
+
   //- bid lists
-  .mt-50.flex.justify-center.mx-auto.font-medium.text-base
-    .max-w-full.px-15.mx-auto.w-auto
+  .mt-50.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
+    .w-full.lg_w-3x4.xl_w-2x3.px-15.mx-auto.w-auto
       //- my bids
       ul.mb-30.text-gray-500.flex.flex-col-reverse(v-if="myBids.length")
         li.w-full.flex.justify-between.group(v-for="bid in myBids")
@@ -30,12 +36,17 @@
 
       //- all bids list
       ul.text-gray-500
-        li.w-full.flex.justify-between(v-for="(bid, i) in bids", :class="{'text-white': sameAddr(auction.bidder, bid.sender) && auction.amount === bid.value && i === 0}")
-          .min-w-0.flex-auto.text-left
+        li.w-full.flex.justify-between.hover_text-white(v-for="(bid, i) in bids", :class="{'text-white': (sameAddr(auction.winner, bid.sender) || sameAddr(auction.bidder, bid.sender)) && auction.amount === bid.value && i === 0}")
+          //- time
+          div.md_min-w-1x5.text-left.whitespace-no-wrap.flex-shrink-0 {{ bidTime(bid.timestamp) }}
+          //- bidder
+          .min-w-0.flex-auto.mx-12.text-left.md_text-center
             div.truncate
-              a.lg_hover_text-white(:href="openSeaLink({account: bid.sender})", target="_blank", rel="noopener noreferrer")
-                | {{ sameAddr(address, bid.sender) ? 'YOU' : '0x' + bid.sender.slice(2).toUpperCase() }}
-          div.ml-30 {{ weiToETH(bid.value) }}
+              a(:href="openSeaLink({account: bid.sender})", target="_blank", rel="noopener noreferrer")
+                template(v-if="sameAddr(address, bid.sender)") YOU
+                username(v-else, :address="bid.sender")
+          //- amount
+          div.md_min-w-1x5.text-right.whitespace-no-wrap.flex-shrink-0 {{ weiToETH(bid.value) }}
         //- li.w-full.flex.justify-between(v-for="n in 12")
           .min-w-0.flex-auto.text-left
             div.truncate
@@ -48,18 +59,20 @@
 import { mapState, mapGetters } from 'vuex'
 import Countdown from './Countdown'
 import Btn from './Btn'
+import Username from './Username'
 export default {
   name: 'Auction',
   props: ['releaseMs', 'tokenId'],
-  components: { Countdown, Btn },
+  components: { Countdown, Btn, Username },
   data () {
     return {
-      auction: null,
+      auction: {},
       bidETH: '0',
       myBids: [],
       bids: [],
       listening: false,
-      auctionEnded: null
+      auctionEnded: null,
+      bidsVisible: false
     }
   },
   computed: {
@@ -82,7 +95,7 @@ export default {
     },
     minBidETH () {
       let minBid = '0'
-      if (this.auction) {
+      if (this.auction?.reservePrice) {
         const reserve = Number(this.weiToETH(this.auction.reservePrice))
         const currentBid = Number(this.weiToETH(this.auction.amount))
         minBid = currentBid ? Number(currentBid + this.bidStepETH).toFixed(1) : reserve
@@ -92,16 +105,15 @@ export default {
   },
   methods: {
     async getAuction () {
-      this.auction = null // "Loading..."
       this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
       if (this.auction) {
         // TODO check this getter logic...
         this.auctionEnded = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
-        this.getBids()
-        this.bidETH = this.minBidETH
+        // this.bidETH = this.minBidETH
         if (!this.auctionEnded) {
-          // this.bidETH = this.minBidETH
+          this.bidETH = this.minBidETH
           this.listenToContract()
+          this.getBids()
         } else {
           // this.$emit('ended')
         }
@@ -169,7 +181,7 @@ export default {
 
     onTimerEnded () {
       this.getAuction()
-      // will determine if auction truly ended or extended in last minuted...
+      // will determine if auction truly ended or extended in last minutes...
     },
 
     removeMyBid (time) {
@@ -179,6 +191,30 @@ export default {
 
     sameAddr (first, second) {
       return first?.toLowerCase() === second?.toLowerCase()
+    },
+
+    async endAuction () {
+      console.log('clicky')
+      // TODO - confirm anyone can end given that end of auction will transfer back to artist?
+      const resp = await this.$store.dispatch('auctions/endAuction', { token: this.tokenId })
+      console.log('after', resp)
+      this.getAuction()
+    },
+
+    bidTime (sec) {
+      const date = new Date(Number(sec) * 1000)
+      const pad = val => ('0' + val).slice(-2)
+      return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDay())}  ${date.getHours()}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` // GMT${pad(date.getTimezoneOffset() / 60)}:00`
+    },
+
+    toggleBids () {
+      // used in the parent
+      if (!this.bidsVisible) {
+        if (!this.bids.length) this.getBids()
+        this.bidsVisible = true
+      } else {
+        this.bidsVisible = false
+      }
     }
   },
   created () {

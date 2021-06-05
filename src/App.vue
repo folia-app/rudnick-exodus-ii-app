@@ -5,8 +5,9 @@
       button(v-if="!address", @click="showDisconnect = false; $store.dispatch('connect')") CONNECT
       template(v-else)
         span.sr-only Connected Address:
-        button(@click="showDisconnect = !showDisconnect") {{ addrShort(address) }}
-        button.ml-20(v-show="showDisconnect", @click="$store.dispatch('disconnect')") DISCONNECT
+        button(@click="showDisconnectButton")
+          username(:address="address", :short="true")
+        button.ml-20(v-show="disconnectVisible", @click="$store.dispatch('disconnect')") DISCONNECT
 
     //- poems
     poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace")
@@ -17,14 +18,16 @@
 import { mapState, mapGetters } from 'vuex'
 import '@/style/root.css'
 import PoemSection from '@/components/PoemSection'
+import Username from '@/components/Username'
 export default {
   name: 'App',
-  components: { PoemSection },
+  components: { PoemSection, Username },
   data () {
     return {
       start: 'Sun Jun 05 2021 20:24:26 GMT-0400',
       poems: [],
-      showDisconnect: false
+      disconnectVisible: false,
+      tmout: null
     }
   },
   computed: {
@@ -79,6 +82,13 @@ export default {
         if (e.target !== this) return // only click on self
         hideAbout()
       })
+    },
+    showDisconnectButton () {
+      clearTimeout(this.tmout)
+      this.disconnectVisible = true
+      this.tmout = setTimeout(() => {
+        this.disconnectVisible = false
+      }, 1500)
     }
   },
   created () {

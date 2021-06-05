@@ -1,6 +1,6 @@
 <template lang="pug">
   section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
-    pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html")
+    pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html", @click="onPoemClick")
     div
       small.block.text-sm
         a(:href="`https://opensea.io/assets/0x76e422de0ce8842ebe837bc7ab6984b4fff88055/${tokenId}`", target="_blank", rel="noopener noreferrer", class="lg_hover_text-white transition duration-100")
@@ -13,7 +13,7 @@
 
       //- (auction active !)
       template(v-else-if="auctionStatus === 1")
-        auction.mt-12(:releaseMs="releaseMs", :tokenId="tokenId")
+        auction.mt-12(ref="auction", :releaseMs="releaseMs", :tokenId="tokenId")
 
       //- (acution ended)
       template(v-else-if="auctionStatus === 2")
@@ -47,6 +47,11 @@ export default {
     },
     readable () {
       return new Date(this.releaseMs) // .toLocaleString('en-US', { timeZone: 'America/New_York' })
+    }
+  },
+  methods: {
+    onPoemClick () {
+      return this.$refs.auction?.toggleBids()
     }
   }
 }
