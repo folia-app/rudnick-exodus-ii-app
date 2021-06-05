@@ -121,11 +121,11 @@ export default {
         if (!auction || !auction.exists) throw new Error(`!! Auction for ${token} doesn't exist.`)
 
         // !! paused
-        if (auction.paused) throw new Error(`!! Auction for ${token} is locked. Please wait for release or try again shortly.`)
+        if (auction.paused) throw new Error(`!! Auction ${token} is locked. Please wait for release or try again shortly.`)
 
         // !! auction not released yet
         const isReleased = auction.firstBidTime === '0' || new Date().getTime() >= new Date(Number(auction.firstBidTime) * 1000)
-        if (!isReleased) throw new Error(`!! Auction for ${token} is not yet released.`)
+        if (!isReleased) throw new Error(`!! Auction ${token} is not yet released.`)
 
         // !! auction expired
         if (getters.auctionEnded({ auction })) throw new Error('!! Auction has ended!')

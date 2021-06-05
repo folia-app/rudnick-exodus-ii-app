@@ -1,7 +1,7 @@
 <template lang="pug">
   #app.pb-135
     //- connected address
-    .fixed.bottom-0.right-0.p-15.lg_p-30.text-sm.text-white.font-medium
+    .fixed.bottom-0.right-0.p-15.lg_p-30.text-sm.text-white.font-medium(v-if="pastStart")
       button(v-if="!address", @click="$store.dispatch('connect')") CONNECT
       template(v-else)
         span.sr-only Connected Address:
@@ -13,7 +13,7 @@
     poem-section(v-for="(poem, i) in poems", :poem="poem", :key="poem.offsetHrs", :start="start", :tokenId="i + 1 + tokenSpace", @sunrise="now = new Date()")
 
     //- horizon line
-    <img src="./assets/void.png" class="fixed w-full block top-150ff top-130 sm_top-horizon z-40 left-0 pointer-events-none transition duration-1000" :class="{'opacity-0': !horizonVisible}" />
+    <img src="./assets/void.png" class="fixed w-full block top-150ff top-130 sm_top-horizon z-40 left-0 pointer-events-none transition duration-1000" :class="{'opacity-0': !pastStart}" />
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default {
       const space = process.env.VUE_APP_TOKENSPACE ?? 0
       return space // this.$store.state.networkId === 4 ? 1000 : 0
     },
-    horizonVisible () {
+    pastStart () {
       return this.$store.state.debug || this.now > new Date(this.start)
     }
   },
