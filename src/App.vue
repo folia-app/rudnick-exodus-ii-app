@@ -73,6 +73,7 @@ export default {
         about.classList.add('pointer-events-none')
         about.classList.remove('opacity-100')
         visible = false
+        document.body.style.overflow = 'auto'
       }
       btn.addEventListener('click', (e) => {
         e.preventDefault()
@@ -85,7 +86,6 @@ export default {
         } else {
           // hide
           hideAbout()
-          document.body.style.overflow = ''
         }
       })
       // overlay click
