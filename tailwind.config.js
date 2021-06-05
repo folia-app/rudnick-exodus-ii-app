@@ -205,6 +205,7 @@ module.exports = {
       0: '0',
       100: '10rem',
       130: '13rem',
+      150: '15rem',
       auto: 'auto'
     },
     letterSpacing: {
