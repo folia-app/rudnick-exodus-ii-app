@@ -75,11 +75,15 @@ export default {
       btn.addEventListener('click', (e) => {
         e.preventDefault()
         if (!visible) {
+          // show
           about.classList.add('opacity-100', 'transition', 'duration-500')
           about.classList.remove('pointer-events-none')
           visible = true
+          document.body.style.overflow = 'hidden'
         } else {
+          // hide
           hideAbout()
+          document.body.style.overflow = ''
         }
       })
       // overlay click
