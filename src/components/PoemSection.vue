@@ -1,6 +1,6 @@
 <template lang="pug">
   section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
-    pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html", @click="onPoemClick")
+    pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html", @click="onPoemClick", v-intersect="0.01", @intersect="getAuction")
     div
       small.block.text-sm
         a(:href="`https://opensea.io/assets/0x76e422de0ce8842ebe837bc7ab6984b4fff88055/${tokenId}`", target="_blank", rel="noopener noreferrer", class="lg_hover_text-white transition duration-100")
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Countdown from '@/components/Countdown'
 import Auction from '@/components/Auction'
 export default {
@@ -38,12 +39,19 @@ export default {
   data () {
     return {
       auctionStatus: 0,
-      bidsVisible: false
+      bidsVisible: false,
+      auction: null,
+      hasIntersected: false
     }
   },
   computed: {
+    ...mapState(['reserveAuctionContract']),
     releaseMs () {
-      return new Date(this.start).getTime() + this.poem.offsetHrs * 60 * 60 * 1000
+      let releaseMs = new Date(this.start).getTime() + this.poem.offsetHrs * 60 * 60 * 1000
+      if (this.auction?.firstBidTime) {
+        releaseMs = new Date(Number(this.auction.firstBidTime) * 1000).getTime()
+      }
+      return releaseMs
     },
     readable () {
       return new Date(this.releaseMs) // .toLocaleString('en-US', { timeZone: 'America/New_York' })
@@ -56,6 +64,19 @@ export default {
         this.auctionStatus = 1
       }
       return this.$refs.auction?.toggleBids()
+    },
+    async getAuction () {
+      this.hasIntersected = true
+      if (this.auction === null) {
+        this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
+      }
+    }
+  },
+  watch: {
+    reserveAuctionContract () {
+      if (this.hasIntersected && this.auction === null) {
+        this.getAuction()
+      }
     }
   }
 }

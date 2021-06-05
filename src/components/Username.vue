@@ -1,17 +1,15 @@
 <template lang="pug">
-  span.address {{ name || addressFormatted }}
+  span.address {{ username || addressFormatted }}
 </template>
 
 <script>
 export default {
   name: 'Address',
   props: ['address', 'short'],
-  data () {
-    return {
-      name: null
-    }
-  },
   computed: {
+    username () {
+      return this.$store.state.names[(this.address || '').toLowerCase()]
+    },
     addressFormatted () {
       let address = this.address
       if (address) {
@@ -24,7 +22,7 @@ export default {
     }
   },
   async created () {
-    this.name = await this.$store.dispatch('getAddressOpenSeaName', this.address)
+    this.$store.dispatch('getAddressOpenSeaName', this.address)
   }
 }
 </script>

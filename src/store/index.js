@@ -7,7 +7,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 // import { exception } from 'vue-gtag'
 // modules
 import auctions from './auctions'
-import debounce from 'lodash/debounce'
 
 const networks = {
   mainnet: { id: 1, infura: 'wss://mainnet.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' },
@@ -241,7 +240,7 @@ export default new Vuex.Store({
       })
     },
 
-    getAddressOpenSeaName: debounce(async function ({ state, commit, dispatch }, address) {
+    async getAddressOpenSeaName ({ state, commit, dispatch }, address) {
       try {
         address = address.toLowerCase()
         // saved?
@@ -249,6 +248,14 @@ export default new Vuex.Store({
         // get!
         const prefix = state.networkId === 4 ? 'testnets-' : ''
         let resp = await fetch(`https://${prefix}api.opensea.io/api/v1/account/${address}`)
+
+        // throttled ?
+        if (resp.status === 429) {
+          setTimeout(() => {
+            return dispatch('getAddressOpenSeaName', address)
+          }, 1000)
+        }
+
         resp = await resp.json()
 
         const name = resp.data?.user?.username
@@ -262,7 +269,7 @@ export default new Vuex.Store({
         console.error('@getAddressOpenSeaName', e)
         return false
       }
-    }, 1001, { leading: true, trailing: false })
+    }
 
     /* buy artwork */
     // async buy ({ state, dispatch }, workId) {

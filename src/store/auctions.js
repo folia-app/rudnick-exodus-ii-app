@@ -1,6 +1,7 @@
 import debounce from 'lodash/debounce'
 import { exception } from 'vue-gtag'
 const deployBlock = 0 // process.env.NODE_ENV === 'development' ? 0 : 12088025
+const BigInt = window.BigInt
 
 export default {
   namespaced: true,
@@ -117,22 +118,29 @@ export default {
         if (globalPaused) throw new Error('!! Auctions are currently locked. Please wait for release or try again shortly.')
 
         // !! auction doesn't exist
-        if (!auction.exists) throw new Error(`!! Auction for ${token} doesn't exist.`)
+        if (!auction || !auction.exists) throw new Error(`!! Auction for ${token} doesn't exist.`)
 
         // !! paused
         if (auction.paused) throw new Error(`!! Auction for ${token} is locked. Please wait for release or try again shortly.`)
+
+        // !! auction not released yet
+        const isReleased = auction.firstBidTime === '0' || new Date().getTime() >= new Date(Number(auction.firstBidTime) * 1000)
+        if (!isReleased) throw new Error(`!! Auction for ${token} is not yet released.`)
 
         // !! auction expired
         if (getters.auctionEnded({ auction })) throw new Error('!! Auction has ended!')
 
         // !! less than reserve price
         const belowReserve = bn(wei).lt(bn(auction.reservePrice))
-        if (belowReserve) throw new Error('!! Your bid is below the minimum. Please increase your bid.')
+        if (belowReserve) throw new Error('!! Your bid is below the reserve price. Please increase your bid.')
 
-        // !! bid below minimum
-        const minWei = Number(auction.amount) + state.minBidWei
-        const minETH = rootGetters.weiToETH(minWei.toString())
-        if (bn(wei).lt(minWei)) throw new Error(`!! Minimum bid is ${minETH} ETH. Please increase your bid.`)
+        // !! bid below minimum amount (only applies once a bid of value is in place)
+        if (BigInt(auction.amount)) {
+          const minBidWei = BigInt(auction.amount) + BigInt(rootGetters.ethToWei(state.bidStepETH.toString()))
+          const isBelowMin = BigInt(wei) < minBidWei
+          const minBidETH = rootGetters.weiToETH(minBidWei.toString())
+          if (isBelowMin) throw new Error(`!! Minimum bid is ${minBidETH} ETH. Please increase your bid.`)
+        }
 
         // connected wallet ?
         if (!rootState.address) {

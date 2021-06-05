@@ -91,7 +91,9 @@ export default {
         return this.releaseMs + 1000 * testSeconds
       }
       if (this.auction?.firstBidTime) {
-        return (Number(this.auction.firstBidTime) + Number(this.auction.duration)) * 1000
+        const start = Number(this.auction.firstBidTime) // sec
+        const duration = Number(this.auction.duration) // sec
+        return (start + duration) * 1000
       }
       // default 24h from release
       return this.releaseMs + 24 * 60 * 60 * 1000
