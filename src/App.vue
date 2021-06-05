@@ -2,7 +2,7 @@
   #app.pb-135
     //- connected address
     .fixed.bottom-0.right-0.p-15.lg_p-30.text-sm.text-white.font-medium
-      button(v-if="!address", @click="showDisconnect = false; $store.dispatch('connect')") CONNECT
+      button(v-if="!address", @click="$store.dispatch('connect')") CONNECT
       template(v-else)
         span.sr-only Connected Address:
         button(@click="showDisconnectButton")

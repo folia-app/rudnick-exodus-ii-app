@@ -145,7 +145,7 @@ export default new Vuex.Store({
       }
     },
     SAVE_NAME (state, { address, name }) {
-      state[address] = name
+      state.names[address] = name
     }
   },
   actions: {
@@ -245,13 +245,17 @@ export default new Vuex.Store({
       try {
         address = address.toLowerCase()
         // saved?
+        console.log(address, state.names)
         if (state.names[address]) return state.names[address]
+        console.log('not saved')
         // get!
         const prefix = state.networkId === 4 ? 'testnets-' : ''
         let resp = await fetch(`https://${prefix}api.opensea.io/api/v1/account/${address}`)
         resp = await resp.json()
 
+        console.log(resp)
         const name = resp.data?.user?.username
+        console.log('new', name)
         if (name) {
           commit('SAVE_NAME', { address, name })
         }

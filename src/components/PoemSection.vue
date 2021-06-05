@@ -51,6 +51,10 @@ export default {
   },
   methods: {
     onPoemClick () {
+      // testing ?
+      if (this.$store.state.networkId === 4) {
+        this.auctionStatus = 1
+      }
       return this.$refs.auction?.toggleBids()
     }
   }

@@ -208,7 +208,8 @@ export default {
       return paused
     },
 
-    getPastBids: debounce(async function ({ getters, commit }, { token = 0 }) {
+    // getPastBids: debounce(async function ({ getters, commit }, { token = 0 }) {
+    async getPastBids ({ getters, commit }, { token = 0 }) {
       try {
         let bids = []
         if (getters.contract) {
@@ -221,7 +222,7 @@ export default {
       } catch (e) {
         console.error(e)
       }
-    }, 5000, { leading: true, trailing: false }),
+    }, // , 5000, { leading: true, trailing: false }),
 
     getAuctionsEnded: debounce(async function ({ getters, commit }) {
       try {

@@ -9,15 +9,13 @@
     //- bid
     .mx-20.leading-flat.relative
       label.sr-only Enter a bid:
-      input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", required, :step="bidStepETH", :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
+      input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}")
       small.block.absolute.w-full.pt-8.left-0.text-sm.text-white.font-medium ETH
     //- bid btn
     btn.mx-10.lg_mb-7.px-20(type="submit") BID
 
-  //- (end/claim)
-  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner", @click.native="endAuction")
-    template(v-if="sameAddr(address, auction.bidder)") CLAIM
-    template(v-else) END
+  //- claim btn
+  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- (winner)
   .mt-20.text-base.font-medium(v-else-if="auction.winner", @click="")
@@ -26,13 +24,18 @@
 
   //- bid lists
   .mt-50.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
-    .w-full.lg_w-3x4.xl_w-2x3.px-15.mx-auto.w-auto
+    .w-full.lg_w-2x3.px-15.mx-auto.w-auto
       //- my bids
-      ul.mb-30.text-gray-500.flex.flex-col-reverse(v-if="myBids.length")
+      ul.mb-20.text-gray-500.flex.flex-col-reverse(v-if="myBids.length")
         li.w-full.flex.justify-between.group(v-for="bid in myBids")
-          div {{ bid.status === 2 ? 'ERROR/CANCELLED' : 'BIDDING...' }}
-          div.group-hover_hidden {{ bid.amount }}
-          button.hidden.group-hover_block.text-white(@click="removeMyBid(bid.time)") DELETE
+          //- time
+          div.md_min-w-1x5.text-left.whitespace-no-wrap.flex-shrink-0 {{ bidTime(bid.time) }}
+          //- status
+          .min-w-0.flex-auto.mx-12.text-left.md_text-center {{ bid.status === 2 ? 'ERROR/CANCELLED' : 'BIDDING...' }}
+          //- amount / delete
+          div.md_min-w-1x5.text-right.whitespace-no-wrap.flex-shrink-0
+            div.group-hover_hidden {{ bid.amount }}
+            button.hidden.group-hover_inline.text-white(@click="removeMyBid(bid.time)") DELETE
 
       //- all bids list
       ul.text-gray-500
@@ -96,21 +99,29 @@ export default {
     minBidETH () {
       let minBid = '0'
       if (this.auction?.reservePrice) {
-        const reserve = Number(this.weiToETH(this.auction.reservePrice))
-        const currentBid = Number(this.weiToETH(this.auction.amount))
-        minBid = currentBid ? Number(currentBid + this.bidStepETH).toFixed(1) : reserve
+        const BigInt = window.BigInt
+        const reserve = BigInt(this.auction.reservePrice) // wei
+        const currentBid = BigInt(this.auction.amount) // wei
+        const step = this.ethToWei(this.bidStepETH.toString()) // wei
+        minBid = !currentBid ? reserve
+          : (currentBid + step)
+        minBid = this.weiToETH(minBid.toString()) // eth
       }
       return minBid.toString()
     }
   },
   methods: {
     async getAuction () {
+      // console.log(`fetching auction ${this.tokenId}...`)
       this.auction = await this.$store.dispatch('auctions/get', { token: this.tokenId })
+      // console.log(`fetched ${this.tokenId}`)
+
       if (this.auction) {
         // TODO check this getter logic...
         this.auctionEnded = this.$store.getters['auctions/auctionEnded']({ auction: this.auction })
-        // this.bidETH = this.minBidETH
+        this.getBids()
         if (!this.auctionEnded) {
+          // console.log(this.auction.amount, this.minBidETH)
           this.bidETH = this.minBidETH
           this.listenToContract()
           this.getBids()
@@ -129,7 +140,7 @@ export default {
       this.$gtag.event('bidBtnClick', { event_category: 'auction', event_label: 'Auction.vue', value: `${this.tokenId}: ${this.bidETH}ETH` })
 
       // add to myBids
-      const time = new Date().getTime()
+      const time = new Date().getTime() / 1000 // convert to sec for bidTime
       this.myBids.push({ time, amount: this.bidETH, status: 0 })
 
       // submit bid
@@ -145,6 +156,9 @@ export default {
         const i = bids.findIndex(bid => bid.time === time)
         if (i > -1) bids[i].status = 2
       }
+
+      // refresh auction
+      this.getAuction()
     },
 
     // async endAuction () {
@@ -208,6 +222,7 @@ export default {
     },
 
     toggleBids () {
+      if (!this.auction) return console.warn('no auction to find bids')
       // used in the parent
       if (!this.bidsVisible) {
         if (!this.bids.length) this.getBids()
