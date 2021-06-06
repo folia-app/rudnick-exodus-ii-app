@@ -248,7 +248,6 @@ export default {
     address (val, old) {
       if (old === null) {
         // wallet connect doesn't seem to load the auction...
-        console.log('addr change')
         this.getAuction()
       }
     }

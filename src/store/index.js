@@ -253,7 +253,6 @@ export default new Vuex.Store({
         let resp = await fetch(`https://${prefix}api.opensea.io/api/v1/account/${address}`)
 
         // throttled ?
-        console.log(resp.status)
         if (resp.status === 429) {
           setTimeout(() => {
             return dispatch('getAddressOpenSeaName', address)
