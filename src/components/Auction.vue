@@ -15,7 +15,7 @@
       //- bid
       .mx-20.leading-flat.relative
         label.sr-only Enter a bid:
-        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: bidETH.toString().length * 2.5 + 'rem'}", inputmode="decimal")
+        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: inputWidth}", inputmode="decimal", :placeholder="minBidETH")
         small.block.absolute.w-full.mt-2.md_mt-5.pt-8.left-0.text-sm.text-white.font-medium ETH
       //- bid btn
       btn.mx-10.lg_mb-7.px-20(type="submit") BID
@@ -71,7 +71,7 @@ export default {
   data () {
     return {
       auction: {},
-      bidETH: '0',
+      bidETH: '',
       myBids: [],
       bids: [],
       listening: false,
@@ -110,6 +110,10 @@ export default {
         minBid = this.weiToETH(minBid.toString()) // eth
       }
       return minBid.toString()
+    },
+    inputWidth () {
+      const digits = Math.max(this.bidETH.length, this.minBidETH.length) // length of string
+      return digits * 2.5 + 'rem'
     }
   },
   methods: {
@@ -125,7 +129,7 @@ export default {
 
         if (!this.auctionEnded) {
           // console.log(this.auction.amount, this.minBidETH)
-          this.bidETH = this.minBidETH
+          // this.bidETH = this.minBidETH
           this.listenToContract()
           this.getBids()
         } else {
@@ -265,6 +269,12 @@ input[type="number"] {
     -moz-appearance: none;
     appearance: none;
     margin: 0;
+  }
+  &::placeholder{
+    @apply text-gray-400 opacity-100;
+  }
+  &:focus::placeholder{
+    @apply text-transparent;
   }
 }
 
