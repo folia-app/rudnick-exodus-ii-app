@@ -18,6 +18,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 0
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -32,6 +36,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 2.6751708984375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Single Flaw' // missing b
         }
       ]
     },
@@ -46,6 +54,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 5.350341796875
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -60,6 +72,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 10.70068359375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Single Flaw' // missing g
         }
       ]
     },
@@ -74,6 +90,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 21.4013671875
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -88,6 +108,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 42.802734375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Double Flaw' // missing b,t
         }
       ]
     },
@@ -102,6 +126,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 85.60546875
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -116,6 +144,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 171.2109375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Single Flaw' // missing b
         }
       ]
     },
@@ -130,6 +162,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 342.421875
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -144,6 +180,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 684.84375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -158,6 +198,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 1369.6875
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Single Flaw' // missing s
         }
       ]
     },
@@ -172,6 +216,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 2739.375
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -186,6 +234,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 5478.75
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Triple Flaw' // missing f,m,y
         }
       ]
     },
@@ -200,6 +252,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 10957.5
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -214,6 +270,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 21915
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -228,6 +288,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 43830
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -242,6 +306,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 87660
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -256,6 +324,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 175320
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     },
@@ -270,6 +342,10 @@ export default {
         {
           trait_type: 'Hours Locked',
           value: 350640
+        },
+        {
+          trait_type: 'Grade',
+          value: 'Flawless'
         }
       ]
     }
