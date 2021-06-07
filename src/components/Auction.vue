@@ -5,12 +5,14 @@
     <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
 
   //- (completed / winner)
-  .mt-20.text-base.font-medium(v-if="auction.winner", @click="")
-    a.lg_hover_text-white(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer")
+  .mt-20.text-base.font-medium(v-if="auction.winner")
+    button.p-15.-my-15.leading-none(@click="bidsVisible = !bidsVisible", style="font-size:1.25em") +
+    <br>
+    a.inline-block.mt-18.lg_hover_text-white.leading-none(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer", v-show="bidsVisible")
       username(:address="auction.winner")
 
   //- (bidding UI)
-  form.mt-35.flex.justify-center.w-full(@submit.prevent="bid", v-else-if="auctionEnded !== true")
+  form.mt-35.mb-50.flex.justify-center.w-full(@submit.prevent="bid", v-else-if="auctionEnded !== true")
     .flex.items-center.group.px-20
       //- bid
       .mx-20.leading-flat.relative
@@ -24,7 +26,7 @@
   btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- bid lists
-  .mt-50.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
+  .mt-40.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
     .w-full.lg_w-2x3.px-15.mx-auto.w-auto
       //- my bids
       ul.mb-20.text-gray-500.flex.flex-col-reverse(v-if="myBids.length")
