@@ -42,7 +42,7 @@
 
       //- all bids list
       ul.text-gray-500
-        li.w-full.flex.justify-between.hover_text-white(v-for="(bid, i) in bids", :class="{'text-white': (sameAddr(auction.winner, bid.sender) || sameAddr(auction.bidder, bid.sender)) && auction.amount === bid.value && i === 0}")
+        li.w-full.flex.justify-between.hover_text-white(v-for="(bid, i) in bids", :class="{'text-white': sameAddr(auction.bidder, bid.sender) && auction.amount === bid.value && i === 0}")
           //- time
           div.md_min-w-1x5.text-left.whitespace-no-wrap.flex-shrink-0 {{ bidTime(bid.timestamp) }}
           //- bidder
