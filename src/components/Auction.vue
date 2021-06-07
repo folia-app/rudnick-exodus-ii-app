@@ -233,7 +233,7 @@ export default {
     bidTime (sec) {
       const date = new Date(Number(sec) * 1000)
       const pad = val => ('0' + val).slice(-2)
-      return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDay())}  ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` // GMT${pad(date.getTimezoneOffset() / 60)}:00`
+      return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())}  ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` // GMT${pad(date.getTimezoneOffset() / 60)}:00`
     },
 
     toggleBids () {
