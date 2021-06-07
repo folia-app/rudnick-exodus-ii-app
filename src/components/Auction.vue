@@ -17,7 +17,7 @@
       //- bid
       .mx-20.leading-flat.relative
         label.sr-only Enter a bid:
-        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: inputWidth}", inputmode="decimal", :placeholder="minBidETH")
+        input.text-md.md_text-lg.block.text-center.focus_outline-none(ref="input", type="number", v-model="bidETH", :min="minBidETH", step="any", required, :style="{minWidth: '1.25em', width: inputWidth}", inputmode="decimal", :placeholder="placeholder")
         small.block.absolute.w-full.mt-2.md_mt-5.pt-8.left-0.text-sm.text-white.font-medium ETH
       //- bid btn
       btn.mx-10.lg_mb-7.px-20(type="submit") BID
@@ -113,9 +113,16 @@ export default {
       }
       return minBid.toString()
     },
+    placeholder () {
+      // 0 or 1 if value
+      return '0'
+      // return this.auction?.amount && Number(this.auction.amount) ? '1.0' : '0'
+      // round up minBid to nearest tenth
+      // return roundUp(Number(this.minBidETH), 1).toString()
+    },
     inputWidth () {
-      const digits = Math.max(this.bidETH.length, this.minBidETH.length) // length of string
-      return digits * 2.5 + 'rem'
+      const digits = Math.max(this.bidETH.length, this.placeholder.length) // length of string
+      return digits * 0.44 + 'em'
     }
   },
   methods: {
@@ -259,6 +266,15 @@ export default {
     }
   }
 }
+
+/**
+ * @param num The number to round
+ * @param precision The number of decimal places to preserve
+ */
+// function roundUp(num, precision) {
+//   precision = Math.pow(10, precision)
+//   return Math.ceil(num * precision) / precision
+// }
 </script>
 
 <style lang="postcss">
