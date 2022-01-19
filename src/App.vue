@@ -115,4 +115,9 @@ export default {
 </script>
 
 <style>
+/* purgecss start ignore */
+.web3modal-modal-lightbox{
+  z-index: 999 !important;
+}
+/* purgecss end ignore */
 </style>

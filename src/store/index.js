@@ -35,6 +35,8 @@ const web3Modal = new Web3Modal({
   theme: 'dark'
 })
 
+let initializing
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -153,33 +155,48 @@ export default new Vuex.Store({
   actions: {
     /* setup web3, contracts */
     async init ({ state, commit, dispatch }) {
-      try {
-        // auto-connect?
-        if (web3Modal.cachedProvider) {
-          await dispatch('connect')
-        }
-
-        // setup web3
-        if (!web3) {
-          if (provider) {
-            web3 = new Web3(provider)
-          } else {
-            const n = process.env.NODE_ENV === 'development' ? 'rinkeby' : 'mainnet'
-            web3 = new Web3(new Web3.providers.WebsocketProvider(networks[n].infura))
-          }
-        }
-
-        // setup contracts
-        const networkId = state.networkId || await web3.eth.net.getId() || networks.mainnet.id
-        console.log('network:', networkId)
-        commit('SET_NETWORK', networkId)
-        commit('SET_CONTRACTS', { web3, networkId })
-
-        // listen to provider events
-        dispatch('listenToProvider')
-      } catch (e) {
-        console.error('@init', e)
+      // de-dupe
+      if (initializing) {
+        return initializing
       }
+
+      const setup = async () => {
+        try {
+          // auto-connect?
+          if (web3Modal.cachedProvider) {
+            await dispatch('connect')
+          }
+
+          // setup web3
+          if (!web3) {
+            if (provider) {
+              web3 = new Web3(provider)
+            } else {
+              // fallback to infura
+              // const n = process.env.NODE_ENV === 'development' ? 'rinkeby' : 'mainnet'
+              const n = 'mainnet'
+              web3 = new Web3(new Web3.providers.WebsocketProvider(networks[n].infura))
+            }
+          }
+
+          // setup contracts
+          const networkId = state.networkId || await web3.eth.net.getId() || networks.mainnet.id
+          console.log('network:', networkId)
+          commit('SET_NETWORK', networkId)
+          commit('SET_CONTRACTS', { web3, networkId })
+
+          // listen to provider events
+          dispatch('listenToProvider')
+          initializing = null
+        } catch (e) {
+          console.error('@init', e)
+        }
+      }
+
+      // create a promise for the handler
+      initializing = new Promise((resolve, reject) => setup().then(resolve).catch(reject))
+
+      return initializing
     },
 
     getWeb3 () {
@@ -211,6 +228,10 @@ export default new Vuex.Store({
     disconnect ({ commit }) {
       // clear so they can re-select from scratch
       web3Modal.clearCachedProvider()
+
+      // manually clear walletconnect --- https://github.com/Web3Modal/web3modal/issues/354
+      localStorage.removeItem('walletconnect')
+
       // provider.off('accountsChanged')
       // provider.off('disconnect')
       commit('SIGN_OUT')

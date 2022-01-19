@@ -71,10 +71,9 @@ export default {
         //   return auction
         // }
         // ...fetch
-        // !! contract missing
+        // wait for init
         if (!getters.contract) {
-          console.warn('contract not set')
-          return null // default/loading state in component
+          await dispatch('init', null, { root: true })
         }
         // fetch...
         auction = await getters.contract.methods.auctions(token).call()
