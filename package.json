@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.1.2",
-    "@walletconnect/web3-provider": "^1.4.1",
+    "@walletconnect/web3-provider": "^1.7.1",
     "core-js": "^3.6.5",
     "folia-contracts": "github:folia-app/folia-contracts#ef5331ed28e083b4bf7c1af3ca07a6a0bb22039e",
     "lodash": "^4.17.21",
@@ -22,7 +22,7 @@
     "vue-gtag": "^1.16.1",
     "vuex": "^3.4.0",
     "web3": "^1.3.6",
-    "web3modal": "^1.9.3"
+    "web3modal": "^1.9.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.14.2",
