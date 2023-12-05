@@ -7,43 +7,82 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 // import { exception } from 'vue-gtag'
 // modules
 import auctions from './auctions'
+import onboard from '../plugins/web3onboard/onboard'
+import networksData from '../networks'
+
+const appNetwork = import.meta.env.VITE_NETWORK_NAME
 
 const networks = {
-  mainnet: { id: 1, infura: 'wss://mainnet.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' },
-  rinkeby: { id: 4, infura: 'wss://rinkeby.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' }
+  mainnet: { id: 1, infura: `wss://mainnet.infura.io/ws/v3/${import.meta.env.VITE_INFURA_KEY}` },
+  rinkeby: { id: 4, infura: `wss://rinkeby.infura.io/ws/v3/${import.meta.env.VITE_INFURA_KEY}` }
 }
 
 let web3
 let provider = window.ethereum || Web3.currentProvider || Web3.givenProvider
+let walletProvider
+const infuraProvider = new Web3(new Web3.providers.WebsocketProvider(networks[appNetwork].infura))
 
-// provider options
-const providerOptions = {
-  /* See Provider Options Section */
-  walletconnect: {
-    package: WalletConnectProvider, // required
-    options: {
-      infuraId: '6dcbf1f0bc3e490a86d5e672b56cc4ad' // required
-    }
+// web3onboard.js (connect wallet modal)
+// this subscribes to the onboard.js state object and updates the vuex store anytime it changes
+// this includes connecting, disconnecting or changing balance
+// when connected to the correct network, it updates the contracts to be executable
+// when connected to the wrong network or no network, it updates the contracts to be read-only
+const state = onboard.state.select()
+state.subscribe((update) => {
+  console.log('state update: ', update)
+
+  const account = (update.wallets?.length && update.wallets[0]?.accounts[0]) ?? {}
+  store.commit('ACCOUNT', { account })
+
+  const wallet = update.wallets[0] ?? {}
+  store.commit('WALLET', { wallet })
+
+  const rightNetwork = wallet?.provider?.chainId === networksData[appNetwork].id
+    || wallet?.provider?.chainId === networksData[appNetwork].hex
+    || wallet?.provider?.chains.find(chain => chain.id === networksData[appNetwork].id || chain.id === networksData[appNetwork].hex)
+  
+  if (wallet?.provider && rightNetwork) {
+    walletProvider = wallet.provider
+    web3 = new Web3(walletProvider)
+  } else {
+    // infura fallback
+    web3 = infuraProvider
   }
-}
-
-// setup web3 modal
-const web3Modal = new Web3Modal({
-  // network: 'rinkeby', // optional
-  cacheProvider: true, // optional
-  providerOptions, // required
-  theme: 'dark'
+  // update contracts
+  store.commit('SET_CONTRACTS', { web3 })
 })
 
-let initializing
+// provider options
+// const providerOptions = {
+//   /* See Provider Options Section */
+//   walletconnect: {
+//     package: WalletConnectProvider, // required
+//     options: {
+//       infuraId: import.meta.env.VITE_INFURA_KEY // required
+//     }
+//   }
+// }
+
+// // setup web3 modal
+// const web3Modal = new Web3Modal({
+//   // network: 'rinkeby', // optional
+//   cacheProvider: true, // optional
+//   providerOptions, // required
+//   theme: 'dark'
+// })
+
+// let initializing
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: { auctions },
   state: {
-    address: null,
-    networkId: null,
+    wallet: {},
+    account: {},
+
+    address: null, // TODO: REMOVE for new getter
+    networkId: networks[appNetwork].id,
 
     // foliaContract: null,
     // foliaControllerContract: null,
@@ -56,6 +95,7 @@ export default new Vuex.Store({
     debug: new URL(window.location.href).searchParams.get('debug')
   },
   getters: {
+    address: (state) => state.account?.address ?? null,
     weiToETH: () => (wei) => web3?.utils.fromWei(wei) ?? '-',
     ethToWei: () => (eth) => web3?.utils.toWei(eth) ?? '-',
     workId: () => (uid, prefix) => {
@@ -101,15 +141,21 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    WALLET (state, { wallet }) {
+      state.wallet = wallet
+    },
+    ACCOUNT (state, { account }) {
+      state.account = account
+    },
     SIGN_IN (state, address) {
       state.address = address
     },
     SIGN_OUT (state) {
       state.address = null
     },
-    SET_NETWORK (state, id) {
-      state.networkId = id
-    },
+    // SET_NETWORK (state, id) {
+    //   state.networkId = id
+    // },
     SAVE_WORK (state, work) {
       const i = state.works.findIndex(svd => svd.id === work.id)
       // remove existing ?
@@ -123,27 +169,15 @@ export default new Vuex.Store({
     SAVE_METADATA (state, metadata) {
       state.metadatas.push(metadata)
     },
-    SET_CONTRACTS (state, { web3, networkId }) {
-      if (!web3) return new Error('web3 not defined')
-      // folia
-      // state.foliaContract = new web3.eth.Contract(
-      //   Folia.abi,
-      //   Folia.networks[networkId].address
-      // )
-      // console.log('folia addr', Folia.networks[networkId].address)
-      // // controller
-      // state.foliaControllerContract = new web3.eth.Contract(
-      //   FoliaControllerV2.abi,
-      //   FoliaControllerV2.networks[networkId].address
-      // )
-      // console.log('controller addr', FoliaControllerV2.networks[networkId].address)
+    SET_CONTRACTS (state, { web3 }) {
+      if (!web3) throw new Error('web3 not defined')
       // auctions
-      if (ReserveAuction.networks[networkId]) {
+      if (ReserveAuction.networks[state.networkId]) {
         state.reserveAuctionContract = new web3.eth.Contract(
           ReserveAuction.abi,
-          ReserveAuction.networks[networkId].address
+          ReserveAuction.networks[state.networkId].address
         )
-        console.log('auction addr', ReserveAuction.networks[networkId].address)
+        console.log('auction addr', ReserveAuction.networks[state.networkId].address)
       }
     },
     SAVE_NAME (state, { address, name }) {
@@ -154,50 +188,56 @@ export default new Vuex.Store({
   },
   actions: {
     /* setup web3, contracts */
-    async init ({ state, commit, dispatch }) {
-      // de-dupe
-      if (initializing) {
-        return initializing
-      }
+    // async init ({ state, commit, dispatch }) {
+    //   // de-dupe
+    //   if (initializing) {
+    //     return initializing
+    //   }
 
-      const setup = async () => {
-        try {
-          // auto-connect?
-          if (web3Modal.cachedProvider) {
-            await dispatch('connect')
-          }
+    //   const setup = async () => {
+    //     try {
+    //       // auto-connect?
+    //       if (web3Modal.cachedProvider) {
+    //         await dispatch('connect')
+    //       }
 
-          // setup web3
-          if (!web3) {
-            if (provider) {
-              web3 = new Web3(provider)
-            } else {
-              // fallback to infura
-              // const n = process.env.NODE_ENV === 'development' ? 'rinkeby' : 'mainnet'
-              const n = 'mainnet'
-              web3 = new Web3(new Web3.providers.WebsocketProvider(networks[n].infura))
-            }
-          }
+    //       // setup web3
+    //       if (!web3) {
+    //         if (provider) {
+    //           web3 = new Web3(provider)
+    //         } else {
+    //           // fallback to infura
+    //           // const n = process.env.NODE_ENV === 'development' ? 'rinkeby' : 'mainnet'
+    //           const n = 'mainnet'
+    //           web3 = new Web3(new Web3.providers.WebsocketProvider(networks[n].infura))
+    //         }
+    //       }
 
-          // setup contracts
-          const networkId = state.networkId || await web3.eth.net.getId() || networks.mainnet.id
-          console.log('network:', networkId)
-          commit('SET_NETWORK', networkId)
-          commit('SET_CONTRACTS', { web3, networkId })
+    //       // setup contracts
+    //       const networkId = state.networkId || await web3.eth.net.getId() || networks.mainnet.id
+    //       console.log('network:', networkId)
+    //       commit('SET_NETWORK', networkId)
+    //       commit('SET_CONTRACTS', { web3, networkId })
 
-          // listen to provider events
-          dispatch('listenToProvider')
-          initializing = null
-        } catch (e) {
-          console.error('@init', e)
-        }
-      }
-
-      // create a promise for the handler
-      initializing = new Promise((resolve, reject) => setup().then(resolve).catch(reject))
-
-      return initializing
+    //       // listen to provider events
+    //       dispatch('listenToProvider')
+    //       initializing = null
+    //     } catch (e) {
+    //       console.error('@init', e)
+    //     }
+    //   }
+    init ({ state, commit }) {
+      if (state.reserveAuctionContract) return
+      const web3 = walletProvider ? new Web3(walletProvider) : infuraProvider
+      commit('SET_CONTRACTS', { web3 })
+      return
     },
+
+    //   // create a promise for the handler
+    //   initializing = new Promise((resolve, reject) => setup().then(resolve).catch(reject))
+
+    //   return initializing
+    // },
 
     getWeb3 () {
       // TODO better handler for this
@@ -205,64 +245,72 @@ export default new Vuex.Store({
     },
 
     /* connect wallet */
+    // async connect ({ commit, dispatch }) {
+    //   try {
+    //     // connect and update provider, web3
+    //     provider = await web3Modal.connect()
+    //     web3 = new Web3(provider)
+    //     // save account
+    //     const accounts = await web3.eth.getAccounts()
+    //     const address = accounts[0]
+    //     const networkId = await web3.eth.net.getId()
+    //     // const chainId = await web3.eth.chainId(); // not a function??
+    //     commit('SIGN_IN', address)
+    //     commit('SET_NETWORK', networkId)
+    //   } catch (e) {
+    //     console.error('@connect', e)
+    //     // clear in case
+    //     web3Modal.clearCachedProvider()
+    //   }
+    // },
     async connect ({ commit, dispatch }) {
-      try {
-        // connect and update provider, web3
-        provider = await web3Modal.connect()
-        web3 = new Web3(provider)
-        // save account
-        const accounts = await web3.eth.getAccounts()
-        const address = accounts[0]
-        const networkId = await web3.eth.net.getId()
-        // const chainId = await web3.eth.chainId(); // not a function??
-        commit('SIGN_IN', address)
-        commit('SET_NETWORK', networkId)
-      } catch (e) {
-        console.error('@connect', e)
-        // clear in case
-        web3Modal.clearCachedProvider()
-      }
+      return onboard.connectWallet()
     },
 
     /* disconnect wallet */
-    disconnect ({ commit }) {
-      // clear so they can re-select from scratch
-      web3Modal.clearCachedProvider()
+    // disconnect ({ commit }) {
+    //   // clear so they can re-select from scratch
+    //   web3Modal.clearCachedProvider()
 
-      // manually clear walletconnect --- https://github.com/Web3Modal/web3modal/issues/354
-      localStorage.removeItem('walletconnect')
+    //   // manually clear walletconnect --- https://github.com/Web3Modal/web3modal/issues/354
+    //   localStorage.removeItem('walletconnect')
 
-      // provider.off('accountsChanged')
-      // provider.off('disconnect')
-      commit('SIGN_OUT')
+    //   // provider.off('accountsChanged')
+    //   // provider.off('disconnect')
+    //   commit('SIGN_OUT')
+    // },
+    async disconnect ({ state, commit, dispatch }) {
+      if (!state.wallet.label) return
+      // disconnect the first wallet in the wallets array
+      await onboard.disconnectWallet({ label: state.wallet.label })
     },
 
     /* wallet events */
-    listenToProvider ({ commit, dispatch }) {
-      if (!provider?.on) return
+    // listenToProvider ({ commit, dispatch }) {
+    //   if (!provider?.on) return
 
-      // account changed (or disconnected)
-      provider.on('accountsChanged', accounts => {
-        console.log('accountsChanged', accounts)
-        if (!accounts.length) {
-          return dispatch('disconnect')
-        }
-        commit('SIGN_IN', accounts[0])
-      })
+    //   // account changed (or disconnected)
+    //   provider.on('accountsChanged', accounts => {
+    //     console.log('accountsChanged', accounts)
+    //     if (!accounts.length) {
+    //       return dispatch('disconnect')
+    //     }
+    //     commit('SIGN_IN', accounts[0])
+    //   })
 
-      // changed network
-      provider.on('chainChanged', chainId => {
-        console.log('network changed', chainId)
-        // reload page so data is correct...
-        window.location.reload()
-      })
+    //   // changed network
+    //   provider.on('chainChanged', chainId => {
+    //     console.log('network changed', chainId)
+    //     // reload page so data is correct...
+    //     window.location.reload()
+    //   })
 
-      // random disconnection? (doesn't fire on account disconnect)
-      provider.on('disconnect', error => {
-        console.error('disconnected?', error)
-        dispatch('disconnect')
-      })
-    },
+    //   // random disconnection? (doesn't fire on account disconnect)
+    //   provider.on('disconnect', error => {
+    //     console.error('disconnected?', error)
+    //     dispatch('disconnect')
+    //   })
+    // },
 
     async getAddressOpenSeaName ({ state, commit, dispatch }, address) {
       try {
@@ -446,3 +494,5 @@ export default new Vuex.Store({
     // }
   }
 })
+
+export default store

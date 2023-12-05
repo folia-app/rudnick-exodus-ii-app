@@ -34,8 +34,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['address']),
-    ...mapGetters(['addrShort']),
+    // ...mapState(['address']),
+    ...mapGetters(['address', 'addrShort']),
     tokenSpace () {
       const space = process.env.VITE_TOKENSPACE ?? 0
       return space // this.$store.state.networkId === 4 ? 1000 : 0
@@ -105,7 +105,7 @@ export default {
   created () {
     this.getPoems()
     this.initAbout()
-    this.$store.dispatch('init')
+    // this.$store.dispatch('init')
     this.setStart()
   },
   mounted () {
