@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import ReserveAuction from 'folia-contracts/build/contracts/ReserveAuction.json'
+// import ReserveAuction from 'folia-contracts/build/contracts/ReserveAuction.json'
+import ReserveAuction from '../../contracts/ReserveAuction.json'
 import Web3 from 'web3'
-import Web3Modal from 'web3modal'
-import WalletConnectProvider from '@walletconnect/web3-provider'
 // import { exception } from 'vue-gtag'
 // modules
 import auctions from './auctions'
@@ -17,10 +16,14 @@ const networks = {
   rinkeby: { id: 4, infura: `wss://rinkeby.infura.io/ws/v3/${import.meta.env.VITE_INFURA_KEY}` }
 }
 
-let web3
-let provider = window.ethereum || Web3.currentProvider || Web3.givenProvider
 let walletProvider
 const infuraProvider = new Web3(new Web3.providers.WebsocketProvider(networks[appNetwork].infura))
+// TODO use browser provider if on correct network...
+// let browserProvider = window.ethereum || Web3.currentProvider || Web3.givenProvider
+// browserProvider = browserProvider && new Web3(browserProvider)
+// const fallbackProvider = browserProvider || infuraProvider
+
+let web3 = infuraProvider
 
 // web3onboard.js (connect wallet modal)
 // this subscribes to the onboard.js state object and updates the vuex store anytime it changes
@@ -45,33 +48,11 @@ state.subscribe((update) => {
     walletProvider = wallet.provider
     web3 = new Web3(walletProvider)
   } else {
-    // infura fallback
     web3 = infuraProvider
   }
   // update contracts
   store.commit('SET_CONTRACTS', { web3 })
 })
-
-// provider options
-// const providerOptions = {
-//   /* See Provider Options Section */
-//   walletconnect: {
-//     package: WalletConnectProvider, // required
-//     options: {
-//       infuraId: import.meta.env.VITE_INFURA_KEY // required
-//     }
-//   }
-// }
-
-// // setup web3 modal
-// const web3Modal = new Web3Modal({
-//   // network: 'rinkeby', // optional
-//   cacheProvider: true, // optional
-//   providerOptions, // required
-//   theme: 'dark'
-// })
-
-// let initializing
 
 Vue.use(Vuex)
 
@@ -81,11 +62,8 @@ const store = new Vuex.Store({
     wallet: {},
     account: {},
 
-    // address: null, // TODO: REMOVE for new getter
     networkId: networks[appNetwork].id,
 
-    // foliaContract: null,
-    // foliaControllerContract: null,
     reserveAuctionContract: null,
 
     works: [],
@@ -228,7 +206,6 @@ const store = new Vuex.Store({
     //   }
     init ({ state, commit }) {
       if (state.reserveAuctionContract) return
-      const web3 = walletProvider ? new Web3(walletProvider) : infuraProvider
       commit('SET_CONTRACTS', { web3 })
       return
     },
