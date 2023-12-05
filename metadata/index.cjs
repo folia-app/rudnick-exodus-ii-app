@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   // titlePattern: 'Songs for the Contract {{no}}',
   // editions: 3,
   // generative: true,

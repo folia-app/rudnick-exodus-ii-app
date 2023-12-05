@@ -1,4 +1,4 @@
-import metadata from '../../metadata'
+const metadata = require('../../metadata/index.cjs')
 require('dotenv').config()
 require('encoding') // netlify build error / missing package??
 const domain = process.env.VITE_CANONICAL_DOMAIN
