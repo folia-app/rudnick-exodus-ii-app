@@ -26,8 +26,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import Countdown from '@/components/Countdown'
-import Auction from '@/components/Auction'
+import Countdown from '@/components/Countdown.vue'
+import Auction from '@/components/Auction.vue'
 export default {
   name: 'PoemSection',
   props: ['poem', 'start', 'tokenId'],

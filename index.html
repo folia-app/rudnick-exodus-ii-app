@@ -20,9 +20,18 @@
     <meta property="og:title" content="EXODUS 2" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="David Rudnick" />
-    <meta property="og:image" content="<%= VUE_APP_CANONICAL_DOMAIN %>/twitter-exodus-ii-david-rudnick-folia.png" />
+    <meta property="og:image" content="<%= VITE_CANONICAL_DOMAIN %>/twitter-exodus-ii-david-rudnick-folia.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:domain" content="exodus2.folia.app" />
+    <script type="module">
+      import process from "process";
+      import { Buffer } from "buffer";
+      // import EventEmitter from "events";
+      
+      globalThis.Buffer = Buffer;
+      window.process = process;
+      // window.EventEmitter = EventEmitter;
+    </script>
     <!-- load fonts fast? -->
     <style>
       @font-face {
@@ -350,5 +359,6 @@ Selbstverselbstlichung.</pre>
       <img src="/folia-logo.svg" alt="Folia Logo (fleuron leaf)" class="w-full block" />
     </a>
     <!-- built files will be auto injected -->
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

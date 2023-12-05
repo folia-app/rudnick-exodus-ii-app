@@ -19,8 +19,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import '@/style/root.css'
-import PoemSection from '@/components/PoemSection'
-import Username from '@/components/Username'
+import PoemSection from '@/components/PoemSection.vue'
+import Username from '@/components/Username.vue'
 export default {
   name: 'App',
   components: { PoemSection, Username },
@@ -37,7 +37,7 @@ export default {
     ...mapState(['address']),
     ...mapGetters(['addrShort']),
     tokenSpace () {
-      const space = process.env.VUE_APP_TOKENSPACE ?? 0
+      const space = process.env.VITE_TOKENSPACE ?? 0
       return space // this.$store.state.networkId === 4 ? 1000 : 0
     },
     pastStart () {

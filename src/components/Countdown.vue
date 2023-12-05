@@ -53,7 +53,7 @@ export default {
     endMs () {
       return this.end
       // testing
-      // const testMs = process.env.VUE_APP_DEV_COUNTDOWN
+      // const testMs = process.env.VITE_DEV_COUNTDOWN
       // if (testMs) {
       //   return new Date().getTime() + Number(testMs)
       // }

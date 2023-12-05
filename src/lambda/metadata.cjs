@@ -1,7 +1,7 @@
 import metadata from '../../metadata'
 require('dotenv').config()
 require('encoding') // netlify build error / missing package??
-const domain = process.env.VUE_APP_CANONICAL_DOMAIN
+const domain = process.env.VITE_CANONICAL_DOMAIN
 
 // handler
 exports.handler = async function (event, context) {

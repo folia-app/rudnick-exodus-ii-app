@@ -63,9 +63,9 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Countdown from './Countdown'
-import Btn from './Btn'
-import Username from './Username'
+import Countdown from './Countdown.vue'
+import Btn from './Btn.vue'
+import Username from './Username.vue'
 export default {
   name: 'Auction',
   props: ['releaseMs', 'tokenId', 'auctionInit'],
