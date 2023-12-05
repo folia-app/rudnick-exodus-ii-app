@@ -82,7 +82,7 @@ small {
 
 /* sections */
 section {
-  @apply my-135;
+  @apply py-75;
   /* date */
   & > div {
     @apply mt-24;

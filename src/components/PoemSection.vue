@@ -1,5 +1,5 @@
 <template lang="pug">
-  section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}")
+  section.poem-section.transition-color.duration-1000(:class="{'text-gray-500': !auctionStatus}", :id="tokenId")
     pre.text-poem-sm.lg_text-lg.cursor-default(v-html="poem.html", @click="onPoemClick", v-intersect="0.01", @intersect="getAuction")
     div
       small.block.text-sm
@@ -12,11 +12,11 @@
           <countdown :end="releaseMs" @ended="onUnlockTimerEnd" key="releaseMs" :pending="true"></countdown>
 
       //- (auction active / ended !)
-      template(v-else-if="auctionStatus === 1")
+      template(v-if="auctionStatus === 1 || debug")
         auction.mt-12(ref="auction", :releaseMs="releaseMs", :tokenId="tokenId", :auctionInit="auction")
 
     //- debug info
-    .text-gray.text-lg(v-if="$store.state.debug")
+    //- .text-gray.text-base(v-if="debug")
       | + {{ poem.offsetHrs }} hrs<br>
       | {{ new Date(releaseMs).toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }) }}<br>
       | {{ new Date(releaseMs) / 1000 }} sec<br>
@@ -41,8 +41,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['reserveAuctionContract']),
+    ...mapState(['reserveAuctionContract', 'debug']),
     releaseMs () {
+      const testMs = import.meta.env.VITE_DEV_RELEASE_OFFSET_MS
+      if (testMs) {
+        return new Date().getTime() + Number(testMs)
+      }
+
       let releaseMs = new Date(this.start).getTime() + this.poem.offsetHrs * 60 * 60 * 1000
       if (this.auction?.firstBidTime) {
         releaseMs = new Date(Number(this.auction.firstBidTime) * 1000).getTime()

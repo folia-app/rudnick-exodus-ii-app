@@ -2,7 +2,7 @@
 .auction(v-if="auction")
   //- countdown clock
   .flex.w-full.justify-center(v-if="auction && !auction.winner")
-    <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" values="h,m,s,ms"></countdown>
+    <countdown :end="auctionEndMs" @ended="onTimerEnded" key="1" :values="`${debug ? 'd,' : ''}h,m,s,ms`"></countdown>
 
   //- (completed / winner)
   .mt-20.text-base.font-medium(v-if="auction.winner")
@@ -10,9 +10,12 @@
     <br>
     a.inline-block.mt-18.lg_hover_text-white.leading-none(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer", v-show="bidsVisible")
       username(:address="auction.winner")
+  
+  //- claim btn
+  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- (bidding UI)
-  form.mt-35.mb-50.flex.justify-center.w-full(@submit.prevent="bid", v-else-if="auctionEnded !== true")
+  form.mt-35.mb-50.flex.justify-center.w-full(@submit.prevent="bid", v-if="auctionEnded !== true || (debug && !auction.winner)")
     .flex.items-center.group.px-20
       //- bid
       .mx-20.leading-flat.relative
@@ -22,8 +25,6 @@
       //- bid btn
       btn.mx-10.lg_mb-7.px-20(type="submit") BID
 
-  //- claim btn
-  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- bid lists
   .mt-40.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
@@ -82,7 +83,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['reserveAuctionContract', 'address']),
+    ...mapState(['reserveAuctionContract', 'address', 'debug']),
     ...mapGetters(['weiToETH', 'ethToWei', 'addrShort', 'openSeaLink']),
     bidStepETH () {
       return this.$store.state.auctions.bidStepETH
