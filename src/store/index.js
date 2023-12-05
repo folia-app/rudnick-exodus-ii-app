@@ -81,7 +81,7 @@ const store = new Vuex.Store({
     wallet: {},
     account: {},
 
-    address: null, // TODO: REMOVE for new getter
+    // address: null, // TODO: REMOVE for new getter
     networkId: networks[appNetwork].id,
 
     // foliaContract: null,
@@ -104,7 +104,7 @@ const store = new Vuex.Store({
         : id // 1 - for contract communication
     },
     addrShort: () => (addr) => addr ? '0x' + addr.slice(2, 6).toUpperCase() + '...' + addr.slice(-4).toUpperCase() : '...',
-    userBalance: (state) => (addr) => web3?.eth.getBalance(addr || state.address) || 0, // wei
+    userBalance: (state, getters) => (addr) => web3?.eth.getBalance(addr || getters.address) || 0, // wei
     contractAddr: (state) => state.foliaContract?._address,
     isSoldOut: () => (work) => {
       return work && Number(work.editions) && Number(work.printed) >= Number(work.editions)

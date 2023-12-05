@@ -106,8 +106,9 @@ export default {
       }
     },
 
-    async bid ({ state, getters, dispatch, rootState, rootGetters }, { token, wei }) {
+    async bid ({ state, getters, dispatch, rootGetters }, { token, wei }) {
       try {
+        const address = rootGetters.address
         const auction = await dispatch('get', { token, flush: true })
         const globalPaused = await dispatch('getGlobalPaused')
         const web3 = await dispatch('getWeb3', null, { root: true })
@@ -142,7 +143,7 @@ export default {
         }
 
         // connected wallet ?
-        if (!rootState.address) {
+        if (!address) {
           await dispatch('connect', null, { root: true })
         }
 
@@ -163,7 +164,7 @@ export default {
         // bid !
         const bid = await getters.contract.methods
           .createBid(token)
-          .send({ from: rootState.address, value: wei })
+          .send({ from: address, value: wei })
 
         // refresh auction
         // dispatch('get', { token, flush: true })
@@ -183,12 +184,12 @@ export default {
       }
     },
 
-    async endAuction ({ getters, dispatch, rootState }, { token }) {
+    async endAuction ({ getters, dispatch, rootGetters }, { token }) {
       try {
         // go!
         await getters.contract.methods
           .endAuction(token)
-          .send({ from: rootState.address })
+          .send({ from: rootGetters.address })
 
         // refresh auction
         await dispatch('get', { token, flush: true })
