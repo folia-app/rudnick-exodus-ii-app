@@ -290,7 +290,7 @@ export default new Vuex.Store({
 
         return name
       } catch (e) {
-        console.error('@getAddressOpenSeaName', e)
+        // console.error('@getAddressOpenSeaName', e)
         return false
       }
     }
