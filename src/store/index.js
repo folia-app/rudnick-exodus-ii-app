@@ -8,6 +8,7 @@ import Web3 from 'web3'
 import auctions from './auctions'
 import onboard from '../plugins/web3onboard/onboard'
 import networksData from '../networks'
+import { providers } from 'ethers'
 
 const appNetwork = import.meta.env.VITE_NETWORK_NAME
 
@@ -54,6 +55,16 @@ state.subscribe((update) => {
   store.commit('SET_CONTRACTS', { web3 })
 })
 
+// load saved ensNames
+let ensNames = {}
+try {
+  ensNames = JSON.parse(sessionStorage.getItem('ensNames')) || {}
+  if (ensNames.length !== undefined) throw new Error('malformed ensNames')
+} catch (_) {
+  sessionStorage.removeItem('ensNames')
+  ensNames = {}
+}
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -70,7 +81,8 @@ const store = new Vuex.Store({
     tokens: [],
     metadatas: [],
     names: {},
-    debug: new URL(window.location.href).searchParams.get('debug')
+    debug: new URL(window.location.href).searchParams.get('debug'),
+    ensNames,
   },
   getters: {
     address: (state) => state.account?.address ?? null,
@@ -162,7 +174,12 @@ const store = new Vuex.Store({
       const names = { ...state.names }
       names[address] = name
       state.names = names
-    }
+    },
+    ADD_ENS_NAME(state, { addr, result }) {
+      state.ensNames[addr.toLowerCase()] = result
+      // save to session storage for future lookup
+      sessionStorage.setItem('ensNames', JSON.stringify(state.ensNames))
+    },
   },
   actions: {
     /* setup web3, contracts */
@@ -318,7 +335,7 @@ const store = new Vuex.Store({
         // console.error('@getAddressOpenSeaName', e)
         return false
       }
-    }
+    },
 
     /* buy artwork */
     // async buy ({ state, dispatch }, workId) {
@@ -469,7 +486,42 @@ const store = new Vuex.Store({
     //     return 0
     //   }
     // }
+    async ensName({ state, commit }, addr) {
+      addr = addr.toLowerCase()
+
+      if (state.ensNames[addr] !== undefined) {
+        return state.ensNames[addr]
+      }
+
+      try {
+        const mainnetProvider = await getProvider({ name: 'homestead' })
+        const result = await mainnetProvider.lookupAddress(addr)
+        commit('ADD_ENS_NAME', { addr, result }) // save even null
+        return result
+      } catch (_) { }
+    },
   }
 })
+
+// helper
+async function getProvider({ name = 'homestead' }) {
+  const infuraProvider = new providers.InfuraProvider(name, import.meta.env.VITE_INFURA_KEY)
+  let provider = infuraProvider
+
+  // swap-in window provider if on correct network
+  if (window.ethereum) {
+    const windowProvider = new providers.Web3Provider(window.ethereum)
+
+    try {
+      const network = await windowProvider.getNetwork()
+      if (network.name === name) {
+        provider = windowProvider
+      }
+    } catch (e) {
+      // console.error(e)
+    }
+  }
+  return provider
+}
 
 export default store

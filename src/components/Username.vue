@@ -1,29 +1,51 @@
 <template lang="pug">
-  span.address {{ username || addressFormatted }}
+observer.inline.addr(:class="{'addr--is-you': isYou}" @visible="resolveAddress")
+  | {{ displayName || '...' }}
 </template>
 
 <script>
+import { utils } from 'ethers'
+import Observer from '@/components/Observer.vue'
 export default {
-  name: 'Address',
-  props: ['address', 'short'],
+  name: 'Addr',
+  props: {
+    address: { type: String, default: undefined },
+    short: { type: Boolean, default: true },
+    // openSeaEnabled: { type: Boolean, default: false },
+    youOn: { type: Boolean, default: false },
+    ensEnabled: { type: Boolean, default: true }
+  },
   computed: {
-    username () {
-      return this.$store.state.names[(this.address || '').toLowerCase()]
+    isYou () {
+      return this.address?.toLowerCase() === this.$store.getters.address?.toLowerCase()
     },
-    addressFormatted () {
-      let address = this.address
-      if (address) {
-        address = '0x' + address.slice(2).toUpperCase()
-        if (this.short) {
-          address = this.$store.getters.addrShort(address)
-        }
-      }
-      return address || '0x...'
+    ensName () {
+      return this.$store.state.ensNames[this.address?.toLowerCase()]
+    },
+    displayName () {
+      return this.youOn && this.isYou ? 'YOU'
+        : this.ensName ? this.ensName
+          : this.short && utils.isAddress(this.address) ? this.$store.getters.addrShort(this.address)
+            : this.address
     }
   },
-  async created () {
-    this.$store.dispatch('getAddressOpenSeaName', this.address)
-  }
+  methods: {
+    resolveAddress () {
+      if (this.isYou && this.youOn) return
+
+      if (this.ensName !== undefined) return
+
+      if (this.address?.endsWith('.eth')) return
+
+      if (!utils.isAddress(this.address)) {
+        console.warn(`${this.address} is not a valid ETH address or ENS name`)
+        return
+      }
+
+      this.$store.dispatch('ensName', this.address)
+    }
+  },
+  components: { Observer }
 }
 </script>
 

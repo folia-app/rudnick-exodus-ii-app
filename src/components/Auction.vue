@@ -50,7 +50,7 @@
             div.truncate
               a(:href="openSeaLink({account: bid.sender})", target="_blank", rel="noopener noreferrer")
                 template(v-if="sameAddr(address, bid.sender)") YOU
-                username(v-else, :address="bid.sender")
+                username(v-else, :address="bid.sender", :short="false")
           //- amount
           div.md_min-w-1x5.text-right.whitespace-no-wrap.flex-shrink-0 {{ weiToETH(bid.value) }}
         //- li.w-full.flex.justify-between(v-for="n in 12")

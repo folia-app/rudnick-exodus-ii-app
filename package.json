@@ -30,6 +30,7 @@
     "autoprefixer": "^10.4.16",
     "buffer": "^6.0.3",
     "dotenv": "^16.3.1",
+    "ethers": "5",
     "folia-contracts": "github:folia-app/folia-contracts#ef5331ed28e083b4bf7c1af3ca07a6a0bb22039e",
     "lodash": "^4.17.21",
     "process": "^0.11.10",
