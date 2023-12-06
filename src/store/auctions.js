@@ -106,7 +106,7 @@ export default {
       }
     },
 
-    async bid ({ state, getters, dispatch, rootGetters }, { token, wei }) {
+    async bid ({ state, getters, dispatch, rootState, rootGetters }, { token, wei }) {
       try {
         const address = rootGetters.address
         const auction = await dispatch('get', { token, flush: true })
@@ -144,13 +144,14 @@ export default {
 
         // connected wallet ?
         if (!address) {
-          await dispatch('connect', null, { root: true })
+          // await dispatch('connect', null, { root: true })
+          throw new Error('!! Connect your wallet first!')
         }
 
         // !! not enough ETH
         const balance = await rootGetters.userBalance()
         const insufficientFunds = bn(balance).lt(bn(wei))
-        if (insufficientFunds) throw new Error('!! Insufficient funds in your wallet')
+        if (insufficientFunds) throw new Error('!! Your wallet balance is below that bid.')
 
         // !! low time confirmation
         const hasStarted = Number(auction.firstBidTime)
