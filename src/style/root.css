@@ -6,16 +6,26 @@
 
 :root {
   --onboard-modal-z-index: 45;
-  /* FONTS */
-  /* --onboard-font-family-normal:  'Exodus II', monospace; */
+  
+  /* --onboard-modal-background: black; */
+  --onboard-connect-header-background: rgb(14,14,15);
+  --onboard-main-scroll-container-background: rgb(14,14,15);
 
-  /* --onboard-font-size-1: calc(1.5 * 3rem);
-  --onboard-font-size-2: calc(1.5 * 2.25rem);
-  --onboard-font-size-3: calc(1.5 * 1.5rem);
-  --onboard-font-size-4: calc(1.5 * 1.25rem);
-  --onboard-font-size-5: calc(1.5 * 1rem);
-  --onboard-font-size-6: calc(1.5 * 0.875rem);
-  --onboard-font-size-7: calc(1.5 * 0.75rem); */
+  --onboard-modal-border-radius: 0;
+
+  /* FONTS */
+  --onboard-font-family-normal:  'Exodus II', monospace;
+
+  --font-increase: 1.375;
+  --onboard-font-size-1: calc(var(--font-increase) * 3rem);
+  --onboard-font-size-2: calc(var(--font-increase) * 2.25rem);
+  --onboard-font-size-3: calc(var(--font-increase) * 1.5rem);
+  --onboard-font-size-4: calc(var(--font-increase) * 1.25rem);
+  --onboard-font-size-5: calc(var(--font-increase) * 1rem);
+  --onboard-font-size-6: calc(var(--font-increase) * 0.875rem);
+  --onboard-font-size-7: calc(var(--font-increase) * 0.75rem);
+  --account-select-modal-font-size-5: calc(var(--font-increase) * 1rem);
+  --account-select-modal-font-size-7: calc(var(--font-increase) * .75rem);
 }
 
 /* @font-face {
