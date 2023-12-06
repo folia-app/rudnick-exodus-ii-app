@@ -176,9 +176,10 @@ const store = new Vuex.Store({
       state.names = names
     },
     ADD_ENS_NAME(state, { addr, result }) {
-      state.ensNames[addr.toLowerCase()] = result
+      ensNames[addr.toLowerCase()] = result
       // save to session storage for future lookup
       sessionStorage.setItem('ensNames', JSON.stringify(state.ensNames))
+      state.ensNames = JSON.parse(JSON.stringify(ensNames))
     },
   },
   actions: {

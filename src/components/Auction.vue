@@ -9,7 +9,7 @@
     button.p-15.-my-15.leading-none(@click="bidsVisible = !bidsVisible", style="font-size:1.25em") +
     <br>
     a.inline-block.mt-18.lg_hover_text-white.leading-none(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer", v-show="bidsVisible")
-      username(:address="auction.winner")
+      username(:address="auction.winner", :short="false")
   
   //- claim btn
   btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
