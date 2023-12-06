@@ -33,6 +33,7 @@
 </template>
 
 <script>
+let anim
 export default {
   name: 'CountDown',
   props: {
@@ -43,7 +44,6 @@ export default {
   data () {
     return {
       msUntil: 0,
-      anim: null
     }
   },
   computed: {
@@ -76,11 +76,11 @@ export default {
       // update
       this.msUntil = msUntil
       // animation loop
-      this.anim = requestAnimationFrame(() => this.play())
+      anim = requestAnimationFrame(() => this.play())
     },
     pause () {
       // pause animation
-      cancelAnimationFrame(this.anim)
+      cancelAnimationFrame(anim)
     }
   },
   mounted () {
