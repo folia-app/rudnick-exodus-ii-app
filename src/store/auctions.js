@@ -113,52 +113,55 @@ export default {
         const globalPaused = await dispatch('getGlobalPaused')
         const web3 = await dispatch('getWeb3', null, { root: true })
         const bn = mixed => new web3.utils.BN(mixed)
+        const skipChecks = new URL(window.location.href).searchParams.get('skip')
 
-        // !! all auctions paused
-        if (globalPaused) throw new Error('!! Auctions are currently locked. Please wait for release or try again shortly.')
-
-        // !! auction doesn't exist
-        if (!auction || !auction.exists) throw new Error(`!! Auction for ${token} doesn't exist.`)
-
-        // !! paused
-        if (auction.paused) throw new Error(`!! Auction ${token} is locked. Please wait for release or try again shortly.`)
-
-        // !! auction not released yet
-        const isReleased = auction.firstBidTime === '0' || new Date().getTime() >= new Date(Number(auction.firstBidTime) * 1000)
-        if (!isReleased) throw new Error(`!! Auction ${token} is not yet released.`)
-
-        // !! auction expired
-        if (getters.auctionEnded({ auction })) throw new Error('!! Auction has ended!')
-
-        // !! less than reserve price
-        const belowReserve = bn(wei).lt(bn(auction.reservePrice))
-        if (belowReserve) throw new Error('!! Your bid is below the reserve price. Please increase your bid.')
-
-        // !! bid below minimum amount (only applies once a bid of value is in place)
-        if (BigInt(auction.amount)) {
-          const minBidWei = BigInt(auction.amount) + BigInt(rootGetters.ethToWei(state.bidStepETH.toString()))
-          const isBelowMin = BigInt(wei) < minBidWei
-          const minBidETH = rootGetters.weiToETH(minBidWei.toString())
-          if (isBelowMin) throw new Error(`!! Minimum bid is ${minBidETH} ETH. Please increase your bid.`)
-        }
-
-        // connected wallet ?
-        if (!address) {
-          // await dispatch('connect', null, { root: true })
-          throw new Error('!! Connect your wallet first!')
-        }
-
-        // !! not enough ETH
-        const balance = await rootGetters.userBalance()
-        const insufficientFunds = bn(balance).lt(bn(wei))
-        if (insufficientFunds) throw new Error('!! Your wallet balance is below that bid.')
-
-        // !! low time confirmation
-        const hasStarted = Number(auction.firstBidTime)
-        const endingSoon = getters.auctionEndTimeMs({ auction }) - new Date().getTime() <= state.lowTimeMin * 60 * 1000
-        if (hasStarted && endingSoon) {
-          if (!window.confirm('This auction is ending very soon! There is a high chance your bid will result in an error. Continue?')) {
-            throw new Error('User cancelled bid because low time')
+        if (!skipChecks) {
+          // !! all auctions paused
+          if (globalPaused) throw new Error('!! Auctions are currently locked. Please wait for release or try again shortly.')
+  
+          // !! auction doesn't exist
+          if (!auction || !auction.exists) throw new Error(`!! Auction for ${token} doesn't exist.`)
+  
+          // !! paused
+          if (auction.paused) throw new Error(`!! Auction ${token} is locked. Please wait for release or try again shortly.`)
+  
+          // !! auction not released yet
+          const isReleased = auction.firstBidTime === '0' || new Date().getTime() >= new Date(Number(auction.firstBidTime) * 1000)
+          if (!isReleased) throw new Error(`!! Auction ${token} is not yet released.`)
+  
+          // !! auction expired
+          if (getters.auctionEnded({ auction })) throw new Error('!! Auction has ended!')
+  
+          // !! less than reserve price
+          const belowReserve = bn(wei).lt(bn(auction.reservePrice))
+          if (belowReserve) throw new Error('!! Your bid is below the reserve price. Please increase your bid.')
+  
+          // !! bid below minimum amount (only applies once a bid of value is in place)
+          if (BigInt(auction.amount)) {
+            const minBidWei = BigInt(auction.amount) + BigInt(rootGetters.ethToWei(state.bidStepETH.toString()))
+            const isBelowMin = BigInt(wei) < minBidWei
+            const minBidETH = rootGetters.weiToETH(minBidWei.toString())
+            if (isBelowMin) throw new Error(`!! Minimum bid is ${minBidETH} ETH. Please increase your bid.`)
+          }
+  
+          // connected wallet ?
+          if (!address) {
+            // await dispatch('connect', null, { root: true })
+            throw new Error('!! Connect your wallet first!')
+          }
+  
+          // !! not enough ETH
+          const balance = await rootGetters.userBalance()
+          const insufficientFunds = bn(balance).lt(bn(wei))
+          if (insufficientFunds) throw new Error('!! Your wallet balance is below that bid.')
+  
+          // !! low time confirmation
+          const hasStarted = Number(auction.firstBidTime)
+          const endingSoon = getters.auctionEndTimeMs({ auction }) - new Date().getTime() <= state.lowTimeMin * 60 * 1000
+          if (hasStarted && endingSoon) {
+            if (!window.confirm('This auction is ending very soon! There is a chance your bid will result in an error. Continue?')) {
+              throw new Error('User cancelled bid because low time')
+            }
           }
         }
 
