@@ -43,7 +43,7 @@
 
       //- all bids list
       ul.text-gray-500
-        li.w-full.flex.justify-between.hover_text-white(v-for="(bid, i) in bids", :class="{'text-white': sameAddr(auction.bidder, bid.sender) && auction.amount === bid.value && i === 0}")
+        li.w-full.flex.justify-between.hover_text-white(v-for="(bid, i) in bids", :key="bid.value", :class="{'text-white': sameAddr(auction.bidder, bid.sender) && auction.amount === bid.value && i === 0}")
           //- time
           div.md_min-w-1x5.text-left.whitespace-no-wrap.flex-shrink-0 {{ bidTime(bid.timestamp) }}
           //- bidder
@@ -51,7 +51,7 @@
             div.truncate
               a(:href="openSeaLink({account: bid.sender})", target="_blank", rel="noopener noreferrer")
                 template(v-if="sameAddr(address, bid.sender)") YOU
-                username(v-else, :address="bid.sender", :short="false")
+                username(v-else, :address="bid.sender", :short="false", :key="address")
           //- amount
           div.md_min-w-1x5.text-right.whitespace-no-wrap.flex-shrink-0 {{ weiToETH(bid.value) }}
         //- li.w-full.flex.justify-between(v-for="n in 12")
