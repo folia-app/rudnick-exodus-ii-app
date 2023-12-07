@@ -10,9 +10,6 @@
     <br>
     a.inline-block.mt-18.lg_hover_text-white.leading-none(:href="openSeaLink({account: auction.winner})", target="_blank", rel="noopener noreferrer", v-show="bidsVisible")
       username(:address="auction.winner", :short="false")
-  
-  //- claim btn
-  btn.mt-35.-mb-10.mx-auto.px-15(v-else-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- (bidding UI)
   form.mt-35.mb-50.flex.justify-center.w-full(@submit.prevent="bid", v-if="auctionEnded !== true || (debug && !auction.winner)")
@@ -25,6 +22,8 @@
       //- bid btn
       btn.mx-10.lg_mb-7.px-20(type="submit") BID
 
+  //- claim btn
+  btn.mt-35.-mb-10.mx-auto.px-15(v-if="auctionEnded && !auction.winner && sameAddr(address, auction.bidder)", @click.native="endAuction") CLAIM
 
   //- bid lists
   .mt-40.w-full.flex.justify-center.font-medium.text-base(v-if="auction && (!auction.winner || bidsVisible)")
