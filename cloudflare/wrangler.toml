@@ -1,0 +1,19 @@
+name = "folia-cf-exodus2"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "../dist"
+binding = "ASSETS"
+html_handling = "none"
+not_found_handling = "none"
+
+[alias]
+dotenv = "./src/shims/dotenv.js"
+encoding = "./src/shims/encoding.js"
+
+[vars]
+# Read by the lambda as process.env; it is the base of every url in the
+# metadata documents this endpoint serves.
+VITE_CANONICAL_DOMAIN = "https://exodus2.folia.app"
