@@ -4,7 +4,9 @@ import injectedModule from '@web3-onboard/injected-wallets'
 import myLogo from './folia-logo-svg-string.js'
 
 // const network = import.meta.env.VITE_NETWORK
-const infuraKey = import.meta.env.VITE_INFURA_KEY
+// Keyless. web3-onboard takes one url per chain, so this is a single address
+// rather than a pool.
+const MAINNET_RPC = import.meta.env.VITE_RPC_MAINNET || 'https://gateway.tenderly.co/public/mainnet'
 
 const injected = injectedModule()
 const wcV2InitOptions = {
@@ -26,7 +28,7 @@ const onboard = Onboard({
       id: 1,
       token: 'ETH',
       label: 'Ethereum Mainnet',
-      rpcUrl: `https://mainnet.infura.io/v3/${infuraKey}`
+      rpcUrl: MAINNET_RPC
     },
     // {
     //   id: 11155111,

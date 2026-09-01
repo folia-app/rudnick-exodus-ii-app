@@ -12,19 +12,32 @@ import { providers } from 'ethers'
 
 const appNetwork = import.meta.env.VITE_NETWORK_NAME
 
+// Free, keyless websocket endpoints. This has to stay a websocket: Auction.vue
+// subscribes to live auction events with .on('data'), which an http provider
+// cannot serve.
+//
+// web3's WebsocketProvider takes one url and does not fail over between
+// endpoints, so this is a single address rather than a pool. The alternate below
+// is verified working and can be swapped in via VITE_WSS_MAINNET without a code
+// change — which is the practical form redundancy takes here.
+//
+//   wss://ethereum-rpc.publicnode.com   (default)
+//   wss://eth.drpc.org                  (alternate)
+const WSS_MAINNET = import.meta.env.VITE_WSS_MAINNET || 'wss://ethereum-rpc.publicnode.com'
+
 const networks = {
-  mainnet: { id: 1, infura: `wss://mainnet.infura.io/ws/v3/${import.meta.env.VITE_INFURA_KEY}` },
-  rinkeby: { id: 4, infura: `wss://rinkeby.infura.io/ws/v3/${import.meta.env.VITE_INFURA_KEY}` }
+  mainnet: { id: 1, rpc: WSS_MAINNET },
+  rinkeby: { id: 4, rpc: WSS_MAINNET }
 }
 
 let walletProvider
-const infuraProvider = new Web3(new Web3.providers.WebsocketProvider(networks[appNetwork].infura))
+const rpcProvider = new Web3(new Web3.providers.WebsocketProvider(networks[appNetwork].rpc))
 // TODO use browser provider if on correct network...
 // let browserProvider = window.ethereum || Web3.currentProvider || Web3.givenProvider
 // browserProvider = browserProvider && new Web3(browserProvider)
-// const fallbackProvider = browserProvider || infuraProvider
+// const fallbackProvider = browserProvider || rpcProvider
 
-let web3 = infuraProvider
+let web3 = rpcProvider
 
 // web3onboard.js (connect wallet modal)
 // this subscribes to the onboard.js state object and updates the vuex store anytime it changes
@@ -49,7 +62,7 @@ state.subscribe((update) => {
     walletProvider = wallet.provider
     web3 = new Web3(walletProvider)
   } else {
-    web3 = infuraProvider
+    web3 = rpcProvider
   }
   // update contracts
   store.commit('SET_CONTRACTS', { web3 })
@@ -506,8 +519,11 @@ const store = new Vuex.Store({
 
 // helper
 async function getProvider({ name = 'homestead' }) {
-  const infuraProvider = new providers.InfuraProvider(name, import.meta.env.VITE_INFURA_KEY)
-  let provider = infuraProvider
+  // Keyless http endpoint rather than a keyed provider.
+  const readProvider = new providers.JsonRpcProvider(
+    import.meta.env.VITE_RPC_MAINNET || 'https://gateway.tenderly.co/public/mainnet'
+  )
+  let provider = readProvider
 
   // swap-in window provider if on correct network
   if (window.ethereum) {
