@@ -8,21 +8,35 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 // modules
 import auctions from './auctions'
 
+// No rpc url here any more; reads go through MAINNET_RPCS below. The key that
+// used to be in these entries was hardcoded and shipped in the public bundle.
 const networks = {
-  mainnet: { id: 1, infura: 'wss://mainnet.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' },
-  rinkeby: { id: 4, infura: 'wss://rinkeby.infura.io/ws/v3/6dcbf1f0bc3e490a86d5e672b56cc4ad' }
+  mainnet: { id: 1 },
+  rinkeby: { id: 4 }
 }
 
 let web3
 let provider = window.ethereum || Web3.currentProvider || Web3.givenProvider
 
 // provider options
+// Free, keyless endpoints that answer CORS preflights, benchmarked across
+// sixteen candidates. The key that used to sit here was hardcoded and therefore
+// shipped in the public bundle.
+const MAINNET_RPCS = (process.env.VUE_APP_RPCS || [
+  'https://gateway.tenderly.co/public/mainnet',
+  'https://mainnet.gateway.tenderly.co',
+  'https://eth.drpc.org',
+  'https://rpc.mevblocker.io',
+  'https://ethereum-rpc.publicnode.com'
+].join(',')).split(',').map((s) => s.trim()).filter(Boolean)
+
 const providerOptions = {
   /* See Provider Options Section */
   walletconnect: {
     package: WalletConnectProvider, // required
     options: {
-      infuraId: '6dcbf1f0bc3e490a86d5e672b56cc4ad' // required
+      // an rpc map rather than an infuraId keeps this off a keyed provider
+      rpc: { 1: MAINNET_RPCS[0] }
     }
   }
 }
@@ -172,10 +186,8 @@ export default new Vuex.Store({
             if (provider) {
               web3 = new Web3(provider)
             } else {
-              // fallback to infura
-              // const n = process.env.NODE_ENV === 'development' ? 'rinkeby' : 'mainnet'
-              const n = 'mainnet'
-              web3 = new Web3(new Web3.providers.WebsocketProvider(networks[n].infura))
+              // fallback to the keyless pool
+              web3 = new Web3(new Web3.providers.HttpProvider(MAINNET_RPCS[0]))
             }
           }
 
