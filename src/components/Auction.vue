@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import Web3 from 'web3'
+import { subscribeDeduped, WSS_MAINNET } from '../plugins/multiSocket'
 import { mapState, mapGetters } from 'vuex'
 import Countdown from './Countdown.vue'
 import Btn from './Btn.vue'
@@ -77,6 +79,7 @@ export default {
       myBids: [],
       bids: [],
       listening: false,
+      unsubscribeBids: null,
       auctionEnded: null,
       bidsVisible: false
     }
@@ -125,6 +128,13 @@ export default {
       return digits * 0.44 + 'em'
     }
   },
+  // Close the sockets when the component goes away, or a route change leaves
+  // them open for the life of the tab. beforeDestroy, not beforeUnmount — this
+  // is Vue 2, and the Vue 3 name would simply never be called.
+  beforeDestroy () {
+    this.teardownBids()
+  },
+
   methods: {
     async getAuction () {
       // console.log(`fetching auction ${this.tokenId}...`)
@@ -182,13 +192,33 @@ export default {
     //   this.getAuction()
     // },
 
+    // Sockets outlive the component otherwise, and a route change would leave
+    // three connections per visit open.
+    teardownBids () {
+      if (this.unsubscribeBids) {
+        this.unsubscribeBids()
+        this.unsubscribeBids = null
+        this.listening = false
+      }
+    },
+
     listenToContract () {
       if (this.reserveAuctionContract && !this.listening) {
         // new bid !
-        this.reserveAuctionContract.events
-          .AuctionBid()
-          .on('data', this.onAuctionEvent)
-          .on('error', (error) => console.error(error))
+        // Subscribe on every working endpoint at once and drop duplicates,
+        // rather than trusting one socket. A websocket that stops delivering
+        // does not error — it goes quiet — and a missed event here is a missed
+        // bid. Observed while testing: one endpoint delivered 69 logs in one
+        // run and none in the next, with no error either time.
+        this.unsubscribeBids = subscribeDeduped({
+          Web3,
+          urls: WSS_MAINNET,
+          abi: this.reserveAuctionContract.options.jsonInterface,
+          address: this.reserveAuctionContract.options.address,
+          eventName: 'AuctionBid',
+          onData: this.onAuctionEvent,
+          onError: (error, url) => console.error(`AuctionBid subscription (${url})`, error)
+        })
 
         // auction ended !
         // this.reserveAuctionContract.events
