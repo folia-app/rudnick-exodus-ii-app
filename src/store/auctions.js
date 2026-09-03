@@ -66,6 +66,32 @@ async function scanLogs (contract, event, fromBlock) {
   throw last
 }
 
+const scans = new Map()
+
+/**
+ * The same scan, fetched once.
+ *
+ * getPastBids is dispatched per token by Auction.vue, and every call was
+ * scanning the contract's entire history and then filtering it down to one
+ * token -- so a page of N auctions did N identical full-history scans. That is
+ * what actually exhausts a public gateway's rate limit; retrying harder only
+ * made it worse.
+ *
+ * The history does not vary by token, so one request serves every caller.
+ * Callers that arrive while a scan is in flight await the same promise rather
+ * than starting another. A failure is not cached, so a later caller retries.
+ */
+function cachedScan (contract, event, fromBlock) {
+  const key = contract.options.address + ':' + event
+  if (!scans.has(key)) {
+    scans.set(key, scanLogs(contract, event, fromBlock).catch(e => {
+      scans.delete(key)
+      throw e
+    }))
+  }
+  return scans.get(key)
+}
+
 const BigInt = window.BigInt
 
 export default {
@@ -290,7 +316,7 @@ export default {
       try {
         let bids = []
         if (getters.contract) {
-          const events = await scanLogs(getters.contract, 'AuctionBid', deployBlock)
+          const events = await cachedScan(getters.contract, 'AuctionBid', deployBlock)
           // format
           bids = events.map(({ returnValues }) => returnValues)
           // commit('SAVE_PAST_BIDS', bids)
@@ -305,7 +331,7 @@ export default {
       try {
         let auctions = []
         if (getters.contract) {
-          const events = await scanLogs(getters.contract, 'AuctionEnded', deployBlock)
+          const events = await cachedScan(getters.contract, 'AuctionEnded', deployBlock)
           // format
           auctions = events.map(({ returnValues }) => ({ _tokenId: returnValues.tokenId, ...returnValues }))
           commit('SAVE_AUCTIONS_ENDED', auctions)
