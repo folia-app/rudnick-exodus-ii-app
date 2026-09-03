@@ -22,20 +22,48 @@ const deployBlock = 12088025
 // requests on page load, and publicnode refuses the historical range at any
 // width, so the scans get their own http provider instead. Everything else --
 // calls, subscriptions, transactions -- still goes over the websocket.
-const LOG_RPC = import.meta.env.VITE_LOG_RPC || 'https://gateway.tenderly.co/public/mainnet'
+// More than one, because a single public gateway rate-limits: serving the
+// range is necessary but not sufficient, and the first version of this fix
+// traded "exceed maximum block range" for "rate limit exceeded".
+const LOG_RPCS = (import.meta.env.VITE_LOG_RPC || [
+  'https://gateway.tenderly.co/public/mainnet',
+  'https://mainnet.gateway.tenderly.co'
+].join(',')).split(',').map(s => s.trim()).filter(Boolean)
 
-let logWeb3 = null
-let logTwin = null
+const twins = new Map()
 
-// A read-only twin of the live contract, on the log-capable endpoint. Built
-// from the contract already in the store rather than a second import, so the
-// abi and address cannot drift apart from the one the app is using.
-function forLogs (contract) {
-  if (!logWeb3) logWeb3 = new Web3(new Web3.providers.HttpProvider(LOG_RPC))
-  if (!logTwin || logTwin.options.address !== contract.options.address) {
-    logTwin = new logWeb3.eth.Contract(contract.options.jsonInterface, contract.options.address)
+// A read-only twin of the live contract on a log-capable endpoint. Built from
+// the contract already in the store rather than a second import, so the abi
+// and address cannot drift apart from the one the app is using.
+function forLogs (contract, i) {
+  const url = LOG_RPCS[i % LOG_RPCS.length]
+  const key = url + contract.options.address
+  if (!twins.has(key)) {
+    const web3 = new Web3(new Web3.providers.HttpProvider(url))
+    twins.set(key, new web3.eth.Contract(contract.options.jsonInterface, contract.options.address))
   }
-  return logTwin
+  return twins.get(key)
+}
+
+/**
+ * One log scan, moving to the next endpoint and backing off on failure.
+ *
+ * Rate limiting is the expected failure here, not the exceptional one -- these
+ * are shared public gateways and the whole history is one request -- so a
+ * single attempt is not a real attempt.
+ */
+async function scanLogs (contract, event, fromBlock) {
+  let last
+  for (let attempt = 0; attempt < LOG_RPCS.length * 2; attempt++) {
+    try {
+      return await forLogs(contract, attempt).getPastEvents(event, { fromBlock })
+    } catch (e) {
+      last = e
+      const wait = 300 * Math.pow(2, Math.floor(attempt / LOG_RPCS.length)) + Math.random() * 200
+      await new Promise(r => setTimeout(r, wait))
+    }
+  }
+  throw last
 }
 
 const BigInt = window.BigInt
@@ -262,7 +290,7 @@ export default {
       try {
         let bids = []
         if (getters.contract) {
-          const events = await forLogs(getters.contract).getPastEvents('AuctionBid', { fromBlock: deployBlock })
+          const events = await scanLogs(getters.contract, 'AuctionBid', deployBlock)
           // format
           bids = events.map(({ returnValues }) => returnValues)
           // commit('SAVE_PAST_BIDS', bids)
@@ -277,7 +305,7 @@ export default {
       try {
         let auctions = []
         if (getters.contract) {
-          const events = await forLogs(getters.contract).getPastEvents('AuctionEnded', { fromBlock: deployBlock })
+          const events = await scanLogs(getters.contract, 'AuctionEnded', deployBlock)
           // format
           auctions = events.map(({ returnValues }) => ({ _tokenId: returnValues.tokenId, ...returnValues }))
           commit('SAVE_AUCTIONS_ENDED', auctions)
