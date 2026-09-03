@@ -1,6 +1,43 @@
 import debounce from 'lodash/debounce'
 import { exception } from 'vue-gtag'
-const deployBlock = 0 // process.env.NODE_ENV === 'development' ? 0 : 12088025
+import Web3 from 'web3'
+
+// The auction contract's deploy block. This was 0 -- a scan from genesis --
+// with the real value sitting commented out beside it, presumably left over
+// from local work against a fresh chain.
+const deployBlock = 12088025
+
+// Log scans need an endpoint that will serve a wide block range, and the
+// websocket the rest of the app runs on will not. Asked for this contract's
+// logs from the deploy block, the free endpoints answer:
+//
+//   ethereum-rpc.publicnode.com  "Archive requests require a personal token"
+//   eth.drpc.org                 "ranges over 10000 blocks are not supported
+//                                 on free plan"
+//   gateway.tenderly.co          202 logs
+//
+// The rejection is a json-rpc error rather than a truncated result, so
+// getPastBids and getAuctionsEnded threw outright and the auction history was
+// simply absent. Chunking to stay under the caps would mean ~300 sequential
+// requests on page load, and publicnode refuses the historical range at any
+// width, so the scans get their own http provider instead. Everything else --
+// calls, subscriptions, transactions -- still goes over the websocket.
+const LOG_RPC = import.meta.env.VITE_LOG_RPC || 'https://gateway.tenderly.co/public/mainnet'
+
+let logWeb3 = null
+let logTwin = null
+
+// A read-only twin of the live contract, on the log-capable endpoint. Built
+// from the contract already in the store rather than a second import, so the
+// abi and address cannot drift apart from the one the app is using.
+function forLogs (contract) {
+  if (!logWeb3) logWeb3 = new Web3(new Web3.providers.HttpProvider(LOG_RPC))
+  if (!logTwin || logTwin.options.address !== contract.options.address) {
+    logTwin = new logWeb3.eth.Contract(contract.options.jsonInterface, contract.options.address)
+  }
+  return logTwin
+}
+
 const BigInt = window.BigInt
 
 export default {
@@ -225,7 +262,7 @@ export default {
       try {
         let bids = []
         if (getters.contract) {
-          const events = await getters.contract.getPastEvents('AuctionBid', { fromBlock: deployBlock })
+          const events = await forLogs(getters.contract).getPastEvents('AuctionBid', { fromBlock: deployBlock })
           // format
           bids = events.map(({ returnValues }) => returnValues)
           // commit('SAVE_PAST_BIDS', bids)
@@ -240,7 +277,7 @@ export default {
       try {
         let auctions = []
         if (getters.contract) {
-          const events = await getters.contract.getPastEvents('AuctionEnded', { fromBlock: deployBlock })
+          const events = await forLogs(getters.contract).getPastEvents('AuctionEnded', { fromBlock: deployBlock })
           // format
           auctions = events.map(({ returnValues }) => ({ _tokenId: returnValues.tokenId, ...returnValues }))
           commit('SAVE_AUCTIONS_ENDED', auctions)
